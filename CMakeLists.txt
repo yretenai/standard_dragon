@@ -1,0 +1,57 @@
+cmake_minimum_required(VERSION 3.16)
+project(standard_dragon)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    add_definitions(-wd"4068")
+    add_definitions(-wd"4996")
+    add_definitions(-wd"4251")
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        add_definitions(-EHs)
+    endif()
+    if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        add_definitions(-D_WIN32_CLANG)
+    endif()
+else(!USE_GNU)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi")
+endif()
+
+set(NOESIS_INCLUDE_DIR OFF CACHE PATH "Noesis header include directory")
+
+if(NOESIS_INCLUDE_DIR)
+    if(NOT EXISTS "${NOESIS_INCLUDE_DIR}/noesis/noesisplugin.cpp")
+        message(FATAL_ERROR "NOESIS_INCLUDE_DIR is specified but noesis/noesisplugin.cpp is missing!")
+    endif()
+    if(NOT EXISTS "${NOESIS_INCLUDE_DIR}/noesis/NoeSRShared.h")
+        message(FATAL_ERROR "NOESIS_INCLUDE_DIR is specified but noesis/NoeSRShared.h is missing!")
+    endif()
+    if(NOT EXISTS "${NOESIS_INCLUDE_DIR}/noesis/pluginbasetypes.h")
+        message(FATAL_ERROR "NOESIS_INCLUDE_DIR is specified but noesis/pluginbasetypes.h is missing!")
+    endif()
+    if(NOT EXISTS "${NOESIS_INCLUDE_DIR}/noesis/pluginclasses.h")
+        message(FATAL_ERROR "NOESIS_INCLUDE_DIR is specified but noesis/pluginclasses.h is missing!")
+    endif()
+    if(NOT EXISTS "${NOESIS_INCLUDE_DIR}/noesis/pluginshare.h")
+        message(FATAL_ERROR "NOESIS_INCLUDE_DIR is specified but noesis/pluginshare.h is missing!")
+    endif()
+    if(NOT EXISTS "${NOESIS_INCLUDE_DIR}/noesis/pluginsupport.cpp")
+        message(FATAL_ERROR "NOESIS_INCLUDE_DIR is specified but noesis/pluginsupport.cpp is missing!")
+    endif()
+
+    add_compile_definitions(USE_NOESIS)
+    set(NOESIS_API_SOURCES "${NOESIS_INCLUDE_DIR}/noesis/noesisplugin.cpp" "${NOESIS_INCLUDE_DIR}/noesis/pluginsupport.cpp"
+        "${NOESIS_INCLUDE_DIR}/noesis/NoeSRShared.h" "${NOESIS_INCLUDE_DIR}/noesis/pluginbasetypes.h"
+        "${NOESIS_INCLUDE_DIR}/noesis/pluginclasses.h" "${NOESIS_INCLUDE_DIR}/noesis/pluginshare.h")
+endif()
+
+set(STANDARD_DRAGON_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Array.h" "${CMAKE_CURRENT_SOURCE_DIR}/dragon.h")
+set(STANDARD_DRAGON_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+
