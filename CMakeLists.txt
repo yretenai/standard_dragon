@@ -52,6 +52,6 @@ if(NOESIS_INCLUDE_DIR)
         "${NOESIS_INCLUDE_DIR}/noesis/pluginclasses.h" "${NOESIS_INCLUDE_DIR}/noesis/pluginshare.h")
 endif()
 
-set(STANDARD_DRAGON_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Array.h" "${CMAKE_CURRENT_SOURCE_DIR}/dragon.h")
+set(STANDARD_DRAGON_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/standard_dragon/Array.h" "${CMAKE_CURRENT_SOURCE_DIR}/standard_dragon/dragon.h")
 set(STANDARD_DRAGON_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
