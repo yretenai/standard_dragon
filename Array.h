@@ -84,7 +84,7 @@ namespace dragon {
         }
 
         template <typename U> [[maybe_unused]] static Array<T> ptr_cast(U* buffer, size_t size) {
-            return Array<T>(reinterpret_cast<T*>(buffer), size * sizeof(U) / sizeof(T));
+            return Array<T>(reinterpret_cast<T*>(buffer), size * sizeof(U) / sizeof(T), nullptr);
         }
 
         T& operator[](int index) const { return get(index); }
@@ -120,7 +120,7 @@ namespace dragon {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
                 throw out_of_bounds_exception();
             }
-            return Array<U>(reinterpret_cast<U*>(data() + index), size);
+            return Array<U>(reinterpret_cast<U*>(data() + index), size, nullptr);
         }
 
         template <typename U> [[maybe_unused]] Array<U> lpcast(int* index, int size) {
@@ -133,7 +133,7 @@ namespace dragon {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
                 throw out_of_bounds_exception();
             }
-            return Array<T>((data() + index), size);
+            return Array<T>((data() + index), size, nullptr);
         }
 
         [[maybe_unused]] Array<T> shift(int index) {
