@@ -51,7 +51,7 @@ extern std::ofstream* LogStream;
 #else // USE_NOESIS
 
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
 
 #endif // USE_NOESIS
 #endif
@@ -85,20 +85,20 @@ namespace dragon {
         return value;
     }
 
-    inline Array<char> read_file(std::filesystem::path path) {
+    inline Array<unsigned char> read_file(std::filesystem::path path) {
         std::ifstream file(path, std::ios::binary | std::ios::in);
-        uint32_t size = (uint32_t)std::filesystem::file_size(path);
-        Array<char> bytes(size);
+        auto size = (size_t) std::filesystem::file_size(path);
+        Array<unsigned char> bytes(size, nullptr);
         file.seekg(0, std::ios::beg);
-        file.read(bytes.data(), size);
+        file.read(reinterpret_cast<char *>(bytes.data()), size);
         return bytes;
     }
 
-    inline void write_file(std::filesystem::path path, Array<char>* buffer) {
+    inline void write_file(std::filesystem::path path, Array<unsigned char>* buffer) {
         if (buffer->empty())
             return;
         std::ofstream file(path, std::ios::binary | std::ios::out | std::ios::trunc);
-        file.write(buffer->data(), buffer->size());
+        file.write(reinterpret_cast<const char *>(buffer->data()), buffer->size());
     }
 
     class not_implemented_exception : public std::exception {};

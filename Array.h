@@ -15,7 +15,6 @@ namespace dragon {
     template <typename T> class Array {
       private:
         size_t Length;
-        size_t ActualLength;
         size_t Offset;
 
       protected:
@@ -28,9 +27,12 @@ namespace dragon {
             size_t Index;
 
           public:
-            Iterator() {}
+            Iterator() {
+                Parent = nullptr;
+                Index = 0;
+            }
 
-            Iterator(const Array<T>* parent, size_t index = 0) {
+            explicit Iterator(const Array<T>* parent, size_t index = 0) {
                 Parent = parent;
                 Index = index;
             }
@@ -59,24 +61,20 @@ namespace dragon {
             }
         };
 
-        Array() : Array(0) {}
+        Array() {
+            Pointer = nullptr;
+            Offset = 0;
+            Length = 0;
+        }
 
-        Array(T* buffer, size_t size, size_t align, T* default_value) : Array(size, align) { std::copy_n(buffer, size, Pointer.get()); }
+        Array(T* buffer, size_t size, const T* default_value) : Array(size, default_value) { std::copy_n(buffer, size, Pointer.get()); }
 
-        Array(size_t size, size_t align, T* default_value) {
-            size_t aligned_size = size;
-            if(align > 0) {
-                size_t alignedDelta = size % align;
-                if (alignedDelta != 0) {
-                    aligned_size = size + align - alignedDelta;
-                }
-            }
-            Pointer = std::shared_ptr<T[]>(new T[aligned_size]);
-            for (size_t i = 0; i < aligned_size; ++i)
+        Array(size_t size, const T* default_value) {
+            Pointer = std::shared_ptr<T[]>(new T[size]);
+            for (size_t i = 0; i < size; ++i)
                 Pointer[i] = default_value == nullptr ? T() : *default_value;
             Offset = 0;
-            ActualLength = size;
-            Length = aligned_size;
+            Length = size;
         }
 
         Array(Array<T>* parent, size_t offset) {
@@ -85,7 +83,7 @@ namespace dragon {
             Offset = offset;
         }
 
-        template <typename U> static Array<T> ptr_cast(U* buffer, size_t size) {
+        template <typename U> [[maybe_unused]] static Array<T> ptr_cast(U* buffer, size_t size) {
             return Array<T>(reinterpret_cast<T*>(buffer), size * sizeof(U) / sizeof(T));
         }
 
@@ -105,63 +103,63 @@ namespace dragon {
             data()[index] = value;
         }
 
-        template <typename U> U cast(int index) {
+        template <typename U> [[maybe_unused]] U cast(int index) {
             if (index < 0 || index >= this->size()) {
                 throw out_of_bounds_exception();
             }
             return reinterpret_cast<U*>(data() + index)[0];
         }
 
-        template <typename U> U lpcast(int* index) {
+        template <typename U> [[maybe_unused]] U lpcast(int* index) {
             U tmp = cast<U>(*index);
             *index += sizeof(U) / sizeof(T);
             return tmp;
         }
 
-        template <typename U> Array<U> cast(int index, int size) {
+        template <typename U> [[maybe_unused]] Array<U> cast(int index, int size) {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
                 throw out_of_bounds_exception();
             }
             return Array<U>(reinterpret_cast<U*>(data() + index), size);
         }
 
-        template <typename U> Array<U> lpcast(int* index, int size) {
+        template <typename U> [[maybe_unused]] Array<U> lpcast(int* index, int size) {
             Array<U> tmp = cast<U>(*index, size);
             (*index) += size * sizeof(U) / sizeof(T);
             return tmp;
         }
 
-        Array<T> slice(int index, int size) {
+        [[maybe_unused]] Array<T> slice(int index, int size) {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
                 throw out_of_bounds_exception();
             }
             return Array<T>((data() + index), size);
         }
 
-        Array<T> shift(int index) {
+        [[maybe_unused]] Array<T> shift(int index) {
             if (index < 0 || index >= this->size()) {
                 throw out_of_bounds_exception();
             }
             return Array<T>(this, index);
         }
 
-        Array<T> lpslice(int* index, int size) {
+        [[maybe_unused]] Array<T> lpslice(int* index, int size) {
             Array<T> tmp = slice(*index, size);
             (*index) += size;
             return tmp;
         }
 
-        std::vector<T> const to_vector() { return std::vector<T>(data(), data() + size()); }
+        [[maybe_unused]] std::vector<T> to_vector() { return std::vector<T>(data(), data() + size()); }
 
         T* data() const { return Pointer.get() + Offset; }
 
-        std::shared_ptr<T[]> pointer() const { return Pointer; }
+        [[maybe_unused]] std::shared_ptr<T[]> pointer() const { return Pointer; }
 
-        size_t size() const { return Length - Offset; }
+        [[nodiscard]] size_t size() const { return Length - Offset; }
 
-        size_t byte_size() const { return size() * sizeof(T); }
+        [[nodiscard]] size_t byte_size() const { return size() * sizeof(T); }
 
-        bool empty() const { return this->size() <= 0; }
+        [[nodiscard]] bool empty() const { return this->size() <= 0; }
 
         Iterator begin() const { return Iterator(this, 0); }
 
