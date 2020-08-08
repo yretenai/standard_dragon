@@ -93,7 +93,7 @@ namespace dragon {
 
     inline Array<char> read_file(std::filesystem::path path) {
         std::ifstream file(path, std::ios::binary | std::ios::in);
-        auto size = (size_t) std::filesystem::file_size(path);
+        auto size = (size_t)std::filesystem::file_size(path);
         Array<char> bytes(size, nullptr);
         file.seekg(0, std::ios::beg);
         file.read(bytes.data(), size);
@@ -104,7 +104,7 @@ namespace dragon {
         if (buffer->empty())
             return;
         std::ofstream file(path, std::ios::binary | std::ios::out | std::ios::trunc);
-        file.write(reinterpret_cast<const char *>(buffer->data()), buffer->size());
+        file.write(reinterpret_cast<const char*>(buffer->data()), buffer->size());
     }
 
     class not_implemented_exception : public std::exception {};
