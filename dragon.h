@@ -77,6 +77,12 @@ extern std::ofstream* LogStream;
                                                      << std::flush)
 #endif
 
+#ifndef eprintf
+#define eprintf(...) fprintf(stderr, __VA_ARGS__)
+#else
+#error eprintf already defined?
+#endif
+
 namespace dragon {
     inline int Align(int value, int align) {
         int v = value % align;
