@@ -41,8 +41,6 @@
 #define DRAGON_LIBRARY_NAME "dragon"
 #endif
 
-extern std::ofstream* LogStream;
-
 #ifdef _WIN32
 #ifdef USE_NOESIS
 
@@ -65,15 +63,24 @@ extern std::ofstream* LogStream;
     do {                                                                                            \
         std::stringstream s;                                                                        \
         s << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl; \
-        if (LogStream != nullptr)                                                                   \
-            (*LogStream << s.str() << std::flush);                                                  \
         if (g_nfn != nullptr && g_nfn->NPAPI_DebugLogIsOpen())                                      \
             g_nfn->NPAPI_DebugLogStr(const_cast<char*>(s.str().c_str()));                           \
         (std::cout << s.str() << std::flush);                                                       \
     } while (0)
+#define ELOG(msg)                                                                                    \
+    do {                                                                                            \
+        std::stringstream s;                                                                        \
+        s << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl; \
+        if (g_nfn != nullptr && g_nfn->NPAPI_DebugLogIsOpen())                                      \
+            g_nfn->NPAPI_DebugLogStr(const_cast<char*>(s.str().c_str()));                           \
+        (std::cerr << s.str() << std::flush);                                                       \
+    } while (0)
 #else
 #define LOG(msg)                                                                                                                              \
-    ((LogStream != nullptr ? *LogStream : std::cout) << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl \
+    (std::cout << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl \
+                                                     << std::flush)
+#define ELOG(msg)                                                                                                                              \
+    (std::cerr << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl \
                                                      << std::flush)
 #endif
 
