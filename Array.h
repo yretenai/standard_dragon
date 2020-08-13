@@ -67,7 +67,11 @@ namespace dragon {
             Length = 0;
         }
 
-        Array(T* buffer, size_t size, const T* default_value) : Array(size, default_value) { std::copy_n(buffer, size, Pointer.get()); }
+        Array(T* buffer, size_t size, const T* default_value) : Array(size, default_value) {
+            std::copy_n(buffer, size, Pointer.get());
+            Offset = 0;
+            Length = size;
+        }
 
         Array(size_t size, const T* default_value) {
             Pointer = std::shared_ptr<T[]>(new T[size]);
@@ -82,6 +86,8 @@ namespace dragon {
             Length = parent->Length;
             Offset = offset;
         }
+
+        ~Array() = default;
 
         template <typename U> [[maybe_unused]] static Array<T> ptr_cast(U* buffer, size_t size) {
             return Array<T>(reinterpret_cast<T*>(buffer), size * sizeof(U) / sizeof(T), nullptr);

@@ -100,7 +100,7 @@ namespace dragon {
 
     inline Array<char> read_file(std::filesystem::path path) {
         std::ifstream file(path, std::ios::binary | std::ios::in);
-        auto size = (size_t)std::filesystem::file_size(path);
+        size_t size = (size_t)std::filesystem::file_size(path);
         Array<char> bytes(size, nullptr);
         file.seekg(0, std::ios::beg);
         file.read(bytes.data(), size);
