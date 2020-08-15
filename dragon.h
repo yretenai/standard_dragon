@@ -7,14 +7,14 @@
 #ifndef DRAGON_DRAGON_H
 #define DRAGON_DRAGON_H
 
-#define DRAGON_VERSION_I 3
+#define DRAGON_VERSION_I 4
 #define DRAGON_VERSION_MAJOR 1
-#define DRAGON_VERSION_MINOR 0
-#define DRAGON_VERSION_PATCH 3
-#define DRAGON_VERSION "1.0.3"
+#define DRAGON_VERSION_MINOR 1
+#define DRAGON_VERSION_PATCH 0
+#define DRAGON_VERSION "1.1.0"
 
-#include "Array.h"
-#include <assert.h>
+#include "Array.hpp"
+#include <cassert>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
