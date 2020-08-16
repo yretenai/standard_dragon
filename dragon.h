@@ -67,7 +67,7 @@
             g_nfn->NPAPI_DebugLogStr(const_cast<char*>(s.str().c_str()));                           \
         (std::cout << s.str() << std::flush);                                                       \
     } while (0)
-#define ELOG(msg)                                                                                    \
+#define ELOG(msg)                                                                                   \
     do {                                                                                            \
         std::stringstream s;                                                                        \
         s << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl; \
@@ -76,12 +76,8 @@
         (std::cerr << s.str() << std::flush);                                                       \
     } while (0)
 #else
-#define LOG(msg)                                                                                                                              \
-    (std::cout << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl \
-                                                     << std::flush)
-#define ELOG(msg)                                                                                                                              \
-    (std::cerr << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl \
-                                                     << std::flush)
+#define LOG(msg) (std::cout << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl << std::flush)
+#define ELOG(msg) (std::cerr << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl << std::flush)
 #endif
 
 #ifndef eprintf

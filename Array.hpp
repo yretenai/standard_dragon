@@ -13,14 +13,11 @@ namespace dragon {
     class out_of_bounds_exception : public std::exception {};
 
     template <typename T> class Array {
-      private:
-        size_t Length;
-        size_t Offset;
-
-      protected:
-        std::shared_ptr<T[]> Pointer;
-
       public:
+        std::shared_ptr<T[]> Pointer = nullptr;
+        size_t Length = 0;
+        uintptr_t Offset = 0;
+
         class Iterator {
           private:
             const Array<T>* Parent;
@@ -61,15 +58,10 @@ namespace dragon {
             }
         };
 
-        Array() {
-            Pointer = nullptr;
-            Offset = 0;
-            Length = 0;
-        }
+        Array() {}
 
         Array(T* buffer, size_t size, const T* default_value) : Array(size, default_value) {
             std::copy_n(buffer, size, Pointer.get());
-            Offset = 0;
             Length = size;
         }
 
@@ -77,14 +69,22 @@ namespace dragon {
             Pointer = std::shared_ptr<T[]>(new T[size]);
             for (size_t i = 0; i < size; ++i)
                 Pointer[i] = default_value == nullptr ? T() : *default_value;
-            Offset = 0;
             Length = size;
         }
 
-        Array(Array<T>* parent, size_t offset) {
+        Array(std::shared_ptr<Array<T>> parent, uintptr_t offset) {
             Pointer = parent->Pointer;
+            Offset = offset + parent->Offset;
             Length = parent->Length;
-            Offset = offset;
+        }
+
+        Array(std::shared_ptr<Array<T>> parent, uintptr_t offset, size_t length) {
+            Pointer = parent->Pointer;
+            Offset = offset + parent->Offset;
+            if (length > parent->Length - Offset)
+                Length = parent->Length;
+            else
+                Length = length + offset;
         }
 
         ~Array() = default;
@@ -93,63 +93,63 @@ namespace dragon {
             return Array<T>(reinterpret_cast<T*>(buffer), size * sizeof(U) / sizeof(T), nullptr);
         }
 
-        T& operator[](int index) const { return get(index); }
+        T& operator[](uintptr_t index) const { return get(index); }
 
-        T& get(int index) const {
+        T& get(uintptr_t index) const {
             if (index < 0 || index >= this->size()) {
                 throw out_of_bounds_exception();
             }
             return data()[index];
         }
 
-        void set(int index, T value) const {
+        void set(uintptr_t index, T value) const {
             if (index < 0 || index >= this->size()) {
                 throw out_of_bounds_exception();
             }
             data()[index] = value;
         }
 
-        template <typename U> [[maybe_unused]] U cast(int index) {
+        template <typename U> [[maybe_unused]] U cast(uintptr_t index) {
             if (index < 0 || index >= this->size()) {
                 throw out_of_bounds_exception();
             }
             return reinterpret_cast<U*>(data() + index)[0];
         }
 
-        template <typename U> [[maybe_unused]] U lpcast(int* index) {
+        template <typename U> [[maybe_unused]] U lpcast(uintptr_t* index) {
             U tmp = cast<U>(*index);
             *index += sizeof(U) / sizeof(T);
             return tmp;
         }
 
-        template <typename U> [[maybe_unused]] Array<U> cast(int index, int size) {
+        template <typename U> [[maybe_unused]] Array<U> cast(uintptr_t index, size_t size) {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
                 throw out_of_bounds_exception();
             }
             return Array<U>(reinterpret_cast<U*>(data() + index), size, nullptr);
         }
 
-        template <typename U> [[maybe_unused]] Array<U> lpcast(int* index, int size) {
+        template <typename U> [[maybe_unused]] Array<U> lpcast(uintptr_t* index, size_t size) {
             Array<U> tmp = cast<U>(*index, size);
             (*index) += size * sizeof(U) / sizeof(T);
             return tmp;
         }
 
-        [[maybe_unused]] Array<T> slice(int index, int size) {
+        [[maybe_unused]] Array<T> slice(uintptr_t index, size_t size) {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
                 throw out_of_bounds_exception();
             }
             return Array<T>((data() + index), size, nullptr);
         }
 
-        [[maybe_unused]] Array<T> shift(int index) {
+        [[maybe_unused]] Array<T> shift(uintptr_t index) {
             if (index < 0 || index >= this->size()) {
                 throw out_of_bounds_exception();
             }
             return Array<T>(this, index);
         }
 
-        [[maybe_unused]] Array<T> lpslice(int* index, int size) {
+        [[maybe_unused]] Array<T> lpslice(uintptr_t* index, size_t size) {
             Array<T> tmp = slice(*index, size);
             (*index) += size;
             return tmp;
