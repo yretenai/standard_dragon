@@ -34,6 +34,7 @@ namespace dragon {
             while (ptr < base_stream->size()) {
                 BnkChunkHeader header = base_stream->lpcast<BnkChunkHeader>(&ptr);
                 chunks[header.fourcc] = std::pair<uintptr_t, BnkChunkHeader>(ptr, header);
+                ptr += header.size;
             }
             if (has_chunk(BKHD_FOURCC)) {
                 dragon::Array<char> bkhd_stream = get_chunk(BKHD_FOURCC);
@@ -58,10 +59,6 @@ namespace dragon {
         uint32_t id;
 
         dragon::Array<char> get_chunk(uint32_t fourcc) {
-            if(!has_chunk(fourcc)) {
-                return dragon::Array<char>();
-            }
-
             std::pair<uintptr_t, BnkChunkHeader> pair = chunks[fourcc];
             return dragon::Array<char>(base_stream, pair.first, pair.second.size);
         }
@@ -71,10 +68,6 @@ namespace dragon {
         }
 
         dragon::Array<char> get_stream(uint32_t stream_id) {
-            if(!has_stream(id) || !has_chunk(DATA_FOURCC)) {
-                return dragon::Array<char>();
-            }
-
             std::pair<uintptr_t, BnkChunkHeader> pair = chunks[DATA_FOURCC];
             DataIndexEntry entry = streams[stream_id];
             return dragon::Array<char>(base_stream, pair.first + entry.offset, entry.size);
