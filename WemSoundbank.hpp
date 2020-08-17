@@ -8,6 +8,7 @@
 #include "Array.hpp"
 #include <map>
 #include <memory>
+#include "dragon.h"
 
 namespace dragon {
     class WemSoundbank {
