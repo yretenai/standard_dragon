@@ -94,16 +94,16 @@ namespace dragon {
         return value;
     }
 
-    inline Array<char> read_file(std::filesystem::path path) {
+    inline Array<uint8_t> read_file(std::filesystem::path path) {
         std::ifstream file(path, std::ios::binary | std::ios::in);
         size_t size = (size_t)std::filesystem::file_size(path);
-        Array<char> bytes(size, nullptr);
+        Array<uint8_t> bytes(size, nullptr);
         file.seekg(0, std::ios::beg);
-        file.read(bytes.data(), size);
+        file.read(reinterpret_cast<char*>(bytes.data()), size);
         return bytes;
     }
 
-    inline void write_file(std::filesystem::path path, Array<char>* buffer) {
+    inline void write_file(std::filesystem::path path, Array<uint8_t>* buffer) {
         if (buffer->empty())
             return;
         std::ofstream file(path, std::ios::binary | std::ios::out | std::ios::trunc);
