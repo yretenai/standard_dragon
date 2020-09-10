@@ -4,9 +4,6 @@
 
 #pragma once
 
-#ifndef DRAGON_DRAGON_H
-#define DRAGON_DRAGON_H
-
 #define DRAGON_VERSION_I 4
 #define DRAGON_VERSION_MAJOR 1
 #define DRAGON_VERSION_MINOR 1
@@ -39,6 +36,10 @@
 
 #ifndef DRAGON_LIBRARY_NAME
 #define DRAGON_LIBRARY_NAME "dragon"
+#endif
+
+#ifndef MAX_PATH_NAME_LEN
+#define MAX_PATH_NAME_LEN 32767
 #endif
 
 #ifdef _WIN32
@@ -94,23 +95,22 @@ namespace dragon {
         return value;
     }
 
-    inline Array<uint8_t> read_file(std::filesystem::path path) {
+    inline Array<uint8_t> read_file(const std::filesystem::path& path) {
         std::ifstream file(path, std::ios::binary | std::ios::in);
         size_t size = (size_t)std::filesystem::file_size(path);
         Array<uint8_t> bytes(size, nullptr);
         file.seekg(0, std::ios::beg);
         file.read(reinterpret_cast<char*>(bytes.data()), size);
+        file.close();
         return bytes;
     }
 
-    inline void write_file(std::filesystem::path path, Array<uint8_t>* buffer) {
-        if (buffer->empty())
+    inline void write_file(const std::filesystem::path& path, const Array<uint8_t>& buffer) {
+        if (buffer.empty())
             return;
         std::ofstream file(path, std::ios::binary | std::ios::out | std::ios::trunc);
-        file.write(reinterpret_cast<const char*>(buffer->data()), buffer->size());
+        file.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());
+        file.flush();
+        file.close();
     }
-
-    class not_implemented_exception : public std::exception {};
 } // namespace dragon
-
-#endif // DRAGON_DRAGON_H

@@ -2,8 +2,7 @@
 // Created by yretenai on 2020-08-16.
 //
 
-#ifndef DRAGON_WEMSOUNDBANK_H
-#define DRAGON_WEMSOUNDBANK_H
+#pragma once
 
 #include "Array.hpp"
 #include <map>
@@ -78,5 +77,3 @@ namespace dragon {
         }
     };
 } // namespace dragon
-
-#endif // DRAGON_WEMSOUNDBANK_H

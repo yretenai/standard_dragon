@@ -2,8 +2,7 @@
 // Created by yretenai on 6/5/2020.
 //
 
-#ifndef DRAGON_ARRAY_H
-#define DRAGON_ARRAY_H
+#pragma once
 
 #include <algorithm>
 #include <memory>
@@ -67,7 +66,7 @@ namespace dragon {
 
         Array(size_t size, const T* default_value) {
             Pointer = std::shared_ptr<T[]>(new T[size]);
-            if(default_value != nullptr) {
+            if (default_value != nullptr) {
                 for (size_t i = 0; i < size; ++i)
                     Pointer[i] = *default_value;
             }
@@ -180,7 +179,7 @@ namespace dragon {
 
         size_t byte_size() const { return size() * sizeof(T); }
 
-        bool empty() const { return this->size() <= 0; }
+        bool empty() const { return this->size() <= 0 || this->Pointer == nullptr; }
 
         Iterator begin() const { return Iterator(this, 0); }
 
@@ -195,5 +194,3 @@ namespace dragon {
 #endif
     };
 } // namespace dragon
-
-#endif // DRAGON_ARRAY_H
