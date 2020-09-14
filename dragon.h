@@ -59,27 +59,25 @@
 #define __PRETTY_FUNCTION__ __FUNCTION__
 #endif
 
+#define HEXLOG64 std::setfill('0') << std::hex << std::setw(16)
+#define HEXLOG32 std::setfill('0') << std::hex << std::setw(8)
+#define HEXLOG16 std::setfill('0') << std::hex << std::setw(4)
+
 #ifdef USE_NOESIS
-#define LOG(msg)                                                                                    \
-    do {                                                                                            \
-        std::stringstream s;                                                                        \
-        s << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl; \
-        if (g_nfn != nullptr && g_nfn->NPAPI_DebugLogIsOpen())                                      \
-            g_nfn->NPAPI_DebugLogStr(const_cast<char*>(s.str().c_str()));                           \
-        (std::cout << s.str() << std::flush);                                                       \
-    } while (0)
-#define ELOG(msg)                                                                                   \
-    do {                                                                                            \
-        std::stringstream s;                                                                        \
-        s << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl; \
-        if (g_nfn != nullptr && g_nfn->NPAPI_DebugLogIsOpen())                                      \
-            g_nfn->NPAPI_DebugLogStr(const_cast<char*>(s.str().c_str()));                           \
-        (std::cerr << s.str() << std::flush);                                                       \
+#define OLOG(out, msg)                                                    \
+    do {                                                                  \
+        std::stringstream s;                                              \
+        s << msg << std::endl;                                            \
+        if (g_nfn != nullptr && g_nfn->NPAPI_DebugLogIsOpen())            \
+            g_nfn->NPAPI_DebugLogStr(const_cast<char*>(s.str().c_str())); \
+        (out << s.str() << std::flush);                                   \
     } while (0)
 #else
-#define LOG(msg) (std::cout << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl << std::flush)
-#define ELOG(msg) (std::cerr << "[" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg << std::endl << std::flush)
+#define OLOG(out, msg) (out << msg << std::endl << std::flush)
 #endif
+
+#define LOG(msg) OLOG(std::cout, "[o][" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg)
+#define ELOG(msg) OLOG(std::cerr, "[e][" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg)
 
 #ifndef eprintf
 #define eprintf(...) fprintf(stderr, __VA_ARGS__)
