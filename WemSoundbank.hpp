@@ -5,10 +5,10 @@
 #pragma once
 
 #include "Array.hpp"
+#include "dragon.hpp"
+#include <cstdbool>
 #include <map>
 #include <memory>
-#include <cstdbool>
-#include "dragon.h"
 
 namespace dragon {
     class WemSoundbank {
