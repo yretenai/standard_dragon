@@ -3,7 +3,7 @@ project(standard_dragon)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_EXTENSIONS ON)
 
 if(MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
@@ -48,4 +48,9 @@ if(NOESIS_INCLUDE_DIR)
     set(NOESIS_API_SOURCES "${NOESIS_INCLUDE_DIR}/noesisplugin.cpp" "${NOESIS_INCLUDE_DIR}/pluginsupport.cpp"
         "${NOESIS_INCLUDE_DIR}/NoeSRShared.h" "${NOESIS_INCLUDE_DIR}/pluginbasetypes.h"
         "${NOESIS_INCLUDE_DIR}/pluginclasses.h" "${NOESIS_INCLUDE_DIR}/pluginshare.h")
+endif()
+
+if(DRAGON_TOOLS)
+    add_compile_definitions(DRAGON_TOOLS)
+    add_subdirectory(tool)
 endif()

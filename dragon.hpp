@@ -94,6 +94,9 @@ namespace dragon {
     }
 
     inline Array<uint8_t> read_file(const std::filesystem::path& path) {
+#ifdef DRAGON_TOOLS
+        LOG("Reading file " << path);
+#endif
         std::ifstream file(path, std::ios::binary | std::ios::in);
         size_t size = (size_t)std::filesystem::file_size(path);
         Array<uint8_t> bytes(size, nullptr);
@@ -106,6 +109,13 @@ namespace dragon {
     inline void write_file(const std::filesystem::path& path, const Array<uint8_t>& buffer) {
         if (buffer.empty())
             return;
+#ifdef DRAGON_TOOLS
+        if (std::filesystem::exists(path)) {
+            ELOG("Overwriting file " << path);
+        } else {
+            LOG("Writing file " << path);
+        }
+#endif
         std::ofstream file(path, std::ios::binary | std::ios::out | std::ios::trunc);
         file.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());
         file.flush();
