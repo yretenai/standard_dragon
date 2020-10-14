@@ -32,4 +32,20 @@ namespace dragon::hash {
         }
         return basis;
     }
+
+    uint32_t fnv1_32(const uint8_t* buf, size_t size, uint32_t basis = FNV_BASIS_32, uint32_t prime = FNV_PRIME_32) {
+        for(size_t i = 0; i < size; ++i) {
+            basis *= prime;
+            basis ^= buf[i];
+        }
+        return basis;
+    }
+
+    uint64_t fnv1_64(const uint8_t* buf, size_t size, uint64_t basis = FNV_BASIS_64, uint64_t prime = FNV_PRIME_64) {
+        for(size_t i = 0; i < size; ++i) {
+            basis *= prime;
+            basis ^= buf[i];
+        }
+        return basis;
+    }
 }
