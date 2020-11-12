@@ -1,0 +1,10 @@
+project(fnvsum)
+
+add_executable(fnv1sum main.cpp)
+target_compile_definitions(fnv1sum PRIVATE DRAGON_FNVMODE_32)
+add_executable(fnv1sum64 main.cpp)
+target_compile_definitions(fnv1sum64 PRIVATE DRAGON_FNVMODE_64)
+add_executable(fnv1asum main.cpp)
+target_compile_definitions(fnv1asum PRIVATE DRAGON_FNVMODE_A32)
+add_executable(fnv1asum64 main.cpp)
+target_compile_definitions(fnv1asum64 PRIVATE DRAGON_FNVMODE_A64)

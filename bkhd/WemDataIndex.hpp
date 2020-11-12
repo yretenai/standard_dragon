@@ -16,6 +16,7 @@ namespace dragon::bkhd {
             uint32_t offset = 0;
             uint32_t size = 0;
         } DataIndexEntry;
+        DRAGON_ASSERT(sizeof(DataIndexEntry) == 12, "Bnk DIDX Entry has an invalid size");
 #pragma pack(pop)
         std::map<uint32_t, DataIndexEntry> streams;
 

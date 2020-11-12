@@ -28,6 +28,7 @@ namespace dragon {
             uint32_t fourcc = 0;
             uint32_t size = 0;
         } BnkChunkHeader;
+        DRAGON_ASSERT(sizeof(BnkChunkHeader) == 8, "Bnk Chunk Header has an invalid size");
 #pragma pack(pop)
         static constexpr uint32_t BKHD_FOURCC = MAKEFOURCC('B', 'K', 'H', 'D');
         static constexpr uint32_t DATA_FOURCC = MAKEFOURCC('D', 'A', 'T', 'A');

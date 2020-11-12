@@ -25,28 +25,27 @@ namespace dragon {
             uint32_t stream_table_size = 0;
             uint32_t external_stream_table_size = 0;
         } AudioPackHeader;
+        DRAGON_ASSERT(sizeof(AudioPackHeader) == 28, "Wem Audio Pack header has an invalid size");
 
-        typedef struct AUDIO_PACK_ENTRY {
-            uint32_t id = 0;
+        template<typename T>
+        struct AUDIO_PACK_ENTRY {
+            T id = 0;
             uint32_t alignment = 0;
             uint32_t size = 0;
             uint32_t offset = 0;
             uint32_t folder = 0;
-        } AudioPackEntry;
+        };
 
-        typedef struct AUDIO_PACK_ENTRY_EXTERNAL {
-            uint32_t id = 0;
-            uint32_t bank_id = 0;
-            uint32_t alignment = 0;
-            uint32_t size = 0;
-            uint32_t offset = 0;
-            uint32_t folder = 0;
-        } AudioPackEntryExternal;
+        typedef AUDIO_PACK_ENTRY<uint32_t> AudioPackEntry;
+        DRAGON_ASSERT(sizeof(AudioPackEntry) == 20, "Wem Audio Pack Entry (32-bit) has an invalid size");
+        typedef AUDIO_PACK_ENTRY<uint64_t> AudioPackEntry64;
+        DRAGON_ASSERT(sizeof(AudioPackEntry64) == 24, "Wem Audio Pack Entry (64-bit) has an invalid size");
 
         typedef struct AUDIO_PACK_NAME {
             uint32_t offset;
             uint32_t id;
         } AudioPackName;
+        DRAGON_ASSERT(sizeof(AudioPackName) == 8, "Wem Audio Pack Name Entry has an invalid size");
 #pragma pack(pop)
 
         static constexpr uint32_t AKPK_FOURCC = MAKEFOURCC('A', 'K', 'P', 'K');
@@ -76,7 +75,7 @@ namespace dragon {
 
             cursor += header.stream_table_size;
             count = buffer.cast<uint32_t>(cursor);
-            external_sound_streams = buffer.cast<AudioPackEntryExternal>(cursor + 4, count);
+            external_sound_streams = buffer.cast<AudioPackEntry64>(cursor + 4, count);
         }
 
         ~WemAudioPack() = default;
@@ -86,7 +85,7 @@ namespace dragon {
         std::map<uint32_t, std::wstring> names;
         dragon::Array<AudioPackEntry> banks;
         dragon::Array<AudioPackEntry> sound_streams;
-        dragon::Array<AudioPackEntryExternal> external_sound_streams;
+        dragon::Array<AudioPackEntry64> external_sound_streams;
 
         std::wstring get_name(uint32_t id) {
             if (!names.contains(id)) {
@@ -103,7 +102,7 @@ namespace dragon {
             return dragon::Array<uint8_t>(base_stream, entry.offset * entry.alignment, entry.size);
         }
 
-        dragon::Array<uint8_t> get_external_sound_streams(AudioPackEntryExternal entry) {
+        dragon::Array<uint8_t> get_external_sound_streams(AudioPackEntry64 entry) {
             return dragon::Array<uint8_t>(base_stream, entry.offset * entry.alignment, entry.size);
         }
     };

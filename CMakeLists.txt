@@ -51,6 +51,8 @@ if(NOESIS_INCLUDE_DIR)
 endif()
 
 if(DRAGON_TOOLS)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
     add_compile_definitions(DRAGON_TOOLS)
     add_subdirectory(tool)
 endif()

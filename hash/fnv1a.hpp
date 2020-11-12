@@ -12,6 +12,7 @@
 #include <cstdint>
 
 namespace dragon::hash {
+    static const uint32_t t = 16777619;
     static const uint32_t FNV_PRIME_32 = 0x01000193;
     static const uint32_t FNV_BASIS_32 = 0x811C9DC5;
     static const uint64_t FNV_PRIME_64 = 0x00000100000001B3;

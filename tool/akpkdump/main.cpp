@@ -3,7 +3,6 @@
 //
 
 #include "../../WemAudioPack.hpp"
-#include "../../dragon.hpp"
 
 void process_file(const std::filesystem::path& output, const std::filesystem::path& path) {
     dragon::Array<uint8_t> buffer = dragon::read_file(path);
@@ -25,7 +24,7 @@ void process_file(const std::filesystem::path& output, const std::filesystem::pa
     }
 
     for (auto entry : pack.external_sound_streams) {
-        dragon::write_file(output / pack.get_name(entry.folder) / (std::to_string(entry.bank_id) + "_" + std::to_string(entry.id) + ".wem"),
+        dragon::write_file(output / pack.get_name(entry.folder) / (std::to_string(entry.id) + ".wem"),
                            pack.get_external_sound_streams(entry)); // usually .wav, but sometimes it's still a wem codec.
     }
 }
