@@ -31,18 +31,18 @@ void process_file(const std::filesystem::path& output, const std::filesystem::pa
 
 void process_directory(const std::filesystem::path& output, const std::filesystem::path& base, const std::filesystem::path& path) {
     for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(path)) {
-        const std::filesystem::path& subpath = entry.path();
-        if (std::filesystem::is_regular_file(subpath)) {
-            process_file(output / (std::filesystem::relative(subpath, base).replace_extension()), subpath);
-        } else if (std::filesystem::is_directory(subpath)) {
-            process_directory(output, base, subpath);
+        const std::filesystem::path& subPath = entry.path();
+        if (std::filesystem::is_regular_file(subPath)) {
+            process_file(output / (std::filesystem::relative(subPath, base).replace_extension()), subPath);
+        } else if (std::filesystem::is_directory(subPath)) {
+            process_directory(output, base, subPath);
         }
     }
 }
 
 int main(int argc, char** argv) {
     if (argc < 3) {
-        ELOG("USAGE: " << argv[0] << " output_dir file1.pck...");
+        DRAGON_ELOG("USAGE: " << argv[0] << " output_dir file1.pck...");
         return 1;
     }
 

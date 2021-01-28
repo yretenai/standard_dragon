@@ -16,9 +16,12 @@ namespace dragon::bkhd {
             data = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size(), nullptr);
         }
 
-        dragon::Array<uint8_t> get_stream(WemDataIndex* index, uint32_t stream_id) {
-            WemDataIndex::DataIndexEntry entry = index->streams[stream_id];
+        dragon::Array<uint8_t> get_stream(WemDataIndex::DataIndexEntry entry) {
             return dragon::Array<uint8_t>(data, entry.offset, entry.size);
+        }
+
+        dragon::Array<uint8_t> get_stream(WemDataIndex* index, uint32_t id) {
+            return get_stream(index->streams[id]);
         }
     };
 }
