@@ -42,6 +42,10 @@
 #define HEXLOG64 std::setfill('0') << std::hex << std::setw(16)
 #define HEXLOG32 std::setfill('0') << std::hex << std::setw(8)
 #define HEXLOG16 std::setfill('0') << std::hex << std::setw(4)
+#define BITLOG8(value) std::bitset<8>(value)
+#define BITLOG16(value) std::bitset<16>(value)
+#define BITLOG32(value) std::bitset<32>(value)
+#define BITLOG64(value) std::bitset<64>(value)
 
 #ifndef DRAGON_OLOG
 #define DRAGON_OLOG(out, msg) (out << msg << std::endl << std::flush)

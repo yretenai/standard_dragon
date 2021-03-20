@@ -16,13 +16,13 @@ namespace dragon {
     public:
         std::string text;
 
-        Indent(size_t l) : level(l > 0 ? l : 0), text(level * 2, ' ') {}
+        explicit Indent(size_t l) : level(l > 0 ? l : 0), text(level * 2, ' ') {}
 
-        Indent operator+(const uint64_t &v) {
+        Indent operator+(const uint64_t &v) const {
             return Indent(level + v);
         }
 
-        Indent operator-(const uint64_t &v) {
+        Indent operator-(const uint64_t &v) const {
             return Indent(level - v);
         }
 
@@ -39,7 +39,7 @@ namespace dragon {
             return *this;
         }
 
-        Indent operator=(const uint64_t &v) {
+        Indent& operator=(const uint64_t &v) {
             level = v;
             text = std::string(level * 2, ' ');
             return *this;

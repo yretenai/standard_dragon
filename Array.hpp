@@ -58,7 +58,7 @@ namespace dragon {
             }
         };
 
-        Array() {}
+        Array() = default;
 
         Array(T* buffer, size_t size, const T* default_value) : Array(size, default_value) {
             std::copy_n(buffer, size, Pointer.get());
@@ -176,11 +176,11 @@ namespace dragon {
 
         [[maybe_unused]] std::shared_ptr<T[]> pointer() const { return Pointer; }
 
-        [[maybe_unused]] size_t size() const { return Length - Offset; }
+        [[maybe_unused]] [[nodiscard]] size_t size() const { return Length - Offset; }
 
-        [[maybe_unused]] size_t byte_size() const { return size() * sizeof(T); }
+        [[maybe_unused]] [[nodiscard]] size_t byte_size() const { return size() * sizeof(T); }
 
-        [[maybe_unused]] bool empty() const { return this->size() <= 0 || this->Pointer == nullptr; }
+        [[maybe_unused]] [[nodiscard]] bool empty() const { return this->size() <= 0 || this->Pointer == nullptr; }
 
         [[maybe_unused]] Iterator begin() const { return Iterator(this, 0); }
 
