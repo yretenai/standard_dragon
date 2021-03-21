@@ -5,11 +5,11 @@
 #pragma once
 
 #include <algorithm>
-#include <memory>
-#include <vector>
-#include <sstream>
 #include <cstdint>
+#include <memory>
+#include <sstream>
 #include <type_traits>
+#include <vector>
 
 namespace dragon {
     class out_of_bounds_exception : public std::exception {};
@@ -177,12 +177,13 @@ namespace dragon {
             return std::string(reinterpret_cast<char*>(data()), size());
         }
 
-        template <typename U = typename std::enable_if<sizeof(T) == sizeof(wchar_t) || sizeof(T) == sizeof(char), std::wstring>::type, typename = void>
+        template <typename U = typename std::enable_if<sizeof(T) == sizeof(wchar_t) || sizeof(T) == sizeof(char), std::wstring>::type,
+                  typename = void>
         [[maybe_unused]] U to_wstring() {
-            if(sizeof(T) == sizeof(char)) {
+            if (sizeof(T) == sizeof(char)) {
                 return std::wstring(this->to_string());
             }
-            
+
             return std::wstring(reinterpret_cast<wchar_t*>(data()), size());
         }
 
@@ -191,9 +192,7 @@ namespace dragon {
             return std::istringstream(reinterpret_cast<char*>(data()), size());
         }
 
-        [[maybe_unused]] std::istream to_stream() {
-            return std::istream(reinterpret_cast<char*>(data()), byte_size());
-        }
+        [[maybe_unused]] std::istream to_stream() { return std::istream(reinterpret_cast<char*>(data()), byte_size()); }
 
         [[maybe_unused]] std::vector<T> to_vector() { return std::vector<T>(data(), data() + size()); }
 
