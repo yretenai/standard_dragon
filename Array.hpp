@@ -62,7 +62,7 @@ namespace dragon {
 
         Array() = default;
 
-        Array(T*& buffer, size_t size, bool copy) {
+        Array(T* buffer, size_t size, bool copy) {
             if (copy) {
                 Pointer = std::shared_ptr<T[]>(new T[size]);
                 std::copy_n(buffer, size, Pointer.get());
@@ -72,7 +72,7 @@ namespace dragon {
             Length = size;
         }
 
-        Array(std::shared_ptr<T[]>& pointer, size_t size) {
+        Array(std::shared_ptr<T[]> pointer, size_t size) {
             Pointer = pointer;
             Length = size;
         }
@@ -86,13 +86,13 @@ namespace dragon {
             Length = size;
         }
 
-        Array(std::shared_ptr<Array<T>>& parent, uintptr_t offset) {
+        Array(std::shared_ptr<Array<T>> parent, uintptr_t offset) {
             Pointer = parent->Pointer;
             Offset = offset + parent->Offset;
             Length = parent->Length;
         }
 
-        Array(std::shared_ptr<Array<T>>& parent, uintptr_t offset, size_t length) {
+        Array(std::shared_ptr<Array<T>> parent, uintptr_t offset, size_t length) {
             Pointer = parent->Pointer;
             Offset = offset + parent->Offset;
             if (length > parent->Length - Offset)
@@ -182,14 +182,11 @@ namespace dragon {
             (*index) += size;
         }
 
-        template <typename U = typename std::enable_if<sizeof(T) == sizeof(char), std::string>::type, typename = void>
-        [[maybe_unused]] U to_string() {
+        [[maybe_unused]] std::string to_string() {
             return std::string(reinterpret_cast<char*>(data()), size());
         }
 
-        template <typename U = typename std::enable_if<sizeof(T) == sizeof(wchar_t) || sizeof(T) == sizeof(char), std::wstring>::type,
-                  typename = void>
-        [[maybe_unused]] U to_wstring() {
+        [[maybe_unused]] std::wstring to_wstring() {
             if (sizeof(T) == sizeof(char)) {
                 return std::wstring(this->to_string());
             }
@@ -197,8 +194,7 @@ namespace dragon {
             return std::wstring(reinterpret_cast<wchar_t*>(data()), size());
         }
 
-        template <typename U = typename std::enable_if<sizeof(T) == sizeof(char), std::istringstream>::type, typename = void>
-        [[maybe_unused]] U to_string_stream() {
+        [[maybe_unused]] std::istringstream to_string_stream() {
             return std::istringstream(reinterpret_cast<char*>(data()), size());
         }
 
