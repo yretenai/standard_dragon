@@ -62,8 +62,13 @@ namespace dragon {
 
         Array() = default;
 
-        Array(T* buffer, size_t size, const T* default_value) : Array(size, default_value) {
-            std::copy_n(buffer, size, Pointer.get());
+        Array(T* buffer, size_t size, bool copy) {
+            if(copy) {
+                Pointer = std::shared_ptr<T[]>(new T[size]);
+                std::copy_n(buffer, size, Pointer.get());
+            } else {
+                Pointer = std::shared_ptr<T[]>(buffer);
+            }
             Length = size;
         }
 
@@ -94,7 +99,7 @@ namespace dragon {
         ~Array() = default;
 
         template <typename U> [[maybe_unused]] static Array<T> ptr_cast(U* buffer, size_t size) {
-            return Array<T>(reinterpret_cast<T*>(buffer), size * sizeof(U) / sizeof(T), nullptr);
+            return Array<T>(reinterpret_cast<T*>(buffer), size * sizeof(U) / sizeof(T), true);
         }
 
         [[maybe_unused]] T& operator[](uintptr_t index) const { return get(index); }
@@ -130,7 +135,7 @@ namespace dragon {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
                 throw out_of_bounds_exception();
             }
-            return Array<U>(reinterpret_cast<U*>(data() + index), size, nullptr);
+            return Array<U>(reinterpret_cast<U*>(data() + index), size, true);
         }
 
         template <typename U> [[maybe_unused]] Array<U> lpcast(uintptr_t* index, size_t size) {
@@ -143,7 +148,7 @@ namespace dragon {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
                 throw out_of_bounds_exception();
             }
-            return Array<T>((data() + index), size, nullptr);
+            return Array<T>((data() + index), size, true);
         }
 
         [[maybe_unused]] Array<T> shift(uintptr_t index) {
