@@ -62,13 +62,18 @@ namespace dragon {
 
         Array() = default;
 
-        Array(T* buffer, size_t size, bool copy) {
-            if(copy) {
+        Array(T*& buffer, size_t size, bool copy) {
+            if (copy) {
                 Pointer = std::shared_ptr<T[]>(new T[size]);
                 std::copy_n(buffer, size, Pointer.get());
             } else {
                 Pointer = std::shared_ptr<T[]>(buffer);
             }
+            Length = size;
+        }
+
+        Array(std::shared_ptr<T[]>& pointer, size_t size) {
+            Pointer = pointer;
             Length = size;
         }
 
@@ -81,13 +86,13 @@ namespace dragon {
             Length = size;
         }
 
-        Array(std::shared_ptr<Array<T>> parent, uintptr_t offset) {
+        Array(std::shared_ptr<Array<T>>& parent, uintptr_t offset) {
             Pointer = parent->Pointer;
             Offset = offset + parent->Offset;
             Length = parent->Length;
         }
 
-        Array(std::shared_ptr<Array<T>> parent, uintptr_t offset, size_t length) {
+        Array(std::shared_ptr<Array<T>>& parent, uintptr_t offset, size_t length) {
             Pointer = parent->Pointer;
             Offset = offset + parent->Offset;
             if (length > parent->Length - Offset)
