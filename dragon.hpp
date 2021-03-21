@@ -68,7 +68,7 @@ namespace dragon {
         DRAGON_LOG("Reading file " << path);
 #endif
         std::ifstream file(path, std::ios::binary | std::ios::in);
-        size_t size = (size_t)std::filesystem::file_size(path);
+        auto size = (size_t)std::filesystem::file_size(path);
         Array<uint8_t> bytes(size, nullptr);
         file.seekg(0, std::ios::beg);
         file.read(reinterpret_cast<char*>(bytes.data()), size);
