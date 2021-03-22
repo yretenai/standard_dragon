@@ -3,6 +3,8 @@
 //
 
 #pragma once
+#ifndef DRAGON_INDENT_HPP
+#define DRAGON_INDENT_HPP
 
 #include <cstdint>
 #include <string>
@@ -44,10 +46,12 @@ namespace dragon {
             text = std::string(level * 2, ' ');
             return *this;
         }
-    };
 
-    std::ostream &operator<<(std::ostream &os, const Indent &indent) {
-        os << indent.text;
-        return os;
-    }
+        friend std::ostream &operator<<(std::ostream &os, const Indent &indent) {
+            os << indent.text;
+            return os;
+        }
+    };
 }
+
+#endif // DRAGON_INDENT_HPP
