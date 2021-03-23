@@ -4,9 +4,9 @@
 
 #pragma once
 
-#define DRAGON_VERSION_I 4
+#define DRAGON_VERSION_I 6
 #define DRAGON_VERSION_MAJOR 1
-#define DRAGON_VERSION_MINOR 2
+#define DRAGON_VERSION_MINOR 3
 #define DRAGON_VERSION_PATCH 0
 #define DRAGON_VERSION "1.2.0"
 
