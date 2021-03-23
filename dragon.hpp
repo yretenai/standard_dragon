@@ -35,6 +35,17 @@
 #include <Windows.h>
 #endif
 
+#ifndef NDEBUG
+#ifdef _WIN32
+#define DRAGON_BREAK __debugbreak()
+#else
+#include <csignal>
+#define DRAGON_BREAK raise(SIGTRAP)
+#endif
+#else
+#define DRAGON_BREAK
+#endif
+
 #ifndef __PRETTY_FUNCTION__
 #define __PRETTY_FUNCTION__ __FUNCTION__
 #endif
