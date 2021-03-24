@@ -1,5 +1,5 @@
 //
-// Created by yretenai on 5/28/2020.
+// Created by Lilith on 2020-05-28.
 //
 
 #pragma once
@@ -31,7 +31,9 @@
 #define DRAGON_MAX_PATH 32767
 
 #ifdef _WIN32
+#ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
+#endif // WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
 

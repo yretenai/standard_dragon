@@ -1,5 +1,5 @@
 //
-// Created by yretenai on 2020-10-04.
+// Created by Lilith on 2020-10-04.
 //
 
 #include "../../WemAudioPack.hpp"

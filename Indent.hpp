@@ -1,10 +1,8 @@
 //
-// Created by Yretenai on 11/12/2020.
+// Created by Lilith on 2020-11-12.
 //
 
 #pragma once
-#ifndef DRAGON_INDENT_HPP
-#define DRAGON_INDENT_HPP
 
 #include <cstdint>
 #include <string>
@@ -53,5 +51,3 @@ namespace dragon {
         }
     };
 }
-
-#endif // DRAGON_INDENT_HPP

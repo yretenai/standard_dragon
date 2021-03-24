@@ -1,5 +1,5 @@
 //
-// Created by yretenai on 2020-11-12.
+// Created by Lilith on 2020-11-12.
 //
 
 #include "../../WemSoundbank.hpp"

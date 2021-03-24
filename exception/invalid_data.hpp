@@ -1,5 +1,5 @@
 //
-// Created by yretenai on 2020-09-08.
+// Created by Lilith on 2020-09-08.
 //
 
 #pragma once
