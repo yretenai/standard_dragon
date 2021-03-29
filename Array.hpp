@@ -62,6 +62,8 @@ namespace dragon {
 
         Array() = default;
 
+        explicit Array(std::vector<T> vector) : Array(vector.data(), vector.size(), true) { }
+
         Array(T* buffer, size_t size, bool copy) {
             if (copy) {
                 Pointer = std::shared_ptr<T[]>(new T[size]);
