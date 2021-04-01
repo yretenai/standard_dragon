@@ -103,8 +103,6 @@ namespace dragon {
                 Length = length + offset;
         }
 
-        ~Array() = default;
-
         template <typename U> [[maybe_unused]] static Array<T> ptr_cast(U* buffer, size_t size) {
             return Array<T>(reinterpret_cast<T*>(buffer), size * sizeof(U) / sizeof(T), false);
         }
