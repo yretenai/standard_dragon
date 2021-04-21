@@ -85,20 +85,20 @@ namespace dragon {
         std::map<uint32_t, std::pair<uintptr_t, BnkChunkHeader>> chunks;
         std::map<uint32_t, std::shared_ptr<dragon::bkhd::WemChunk>> parsed_chunks;
 
-        [[maybe_unused]] dragon::Array<uint8_t> get_chunk(uint32_t fourcc) {
+        dragon::Array<uint8_t> get_chunk(uint32_t fourcc) {
             std::pair<uintptr_t, BnkChunkHeader> pair = chunks[fourcc];
             return dragon::Array<uint8_t>(base_stream, pair.first, pair.second.size);
         }
 
-        [[maybe_unused]] std::shared_ptr<dragon::bkhd::WemChunk> get_chunk_impl(uint32_t fourcc) {
+        std::shared_ptr<dragon::bkhd::WemChunk> get_chunk_impl(uint32_t fourcc) {
             if (!has_chunk_impl(fourcc)) {
                 return nullptr;
             }
             return parsed_chunks[fourcc];
         }
 
-        [[maybe_unused]] bool has_chunk(uint32_t fourcc) { return chunks.find(fourcc) != chunks.end(); }
+        bool has_chunk(uint32_t fourcc) { return chunks.find(fourcc) != chunks.end(); }
 
-        [[maybe_unused]] bool has_chunk_impl(uint32_t fourcc) { return parsed_chunks.find(fourcc) != parsed_chunks.end(); }
+        bool has_chunk_impl(uint32_t fourcc) { return parsed_chunks.find(fourcc) != parsed_chunks.end(); }
     };
 } // namespace dragon

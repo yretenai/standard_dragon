@@ -28,11 +28,11 @@ namespace dragon {
         typedef struct AUDIO_PACK_HEADER {
             uint32_t fourcc = AKPK_FOURCC;
             uint32_t size = 0;
-            [[maybe_unused]] uint32_t version = 1;
+            uint32_t version = 1;
             uint32_t name_table_size = 0;
             uint32_t bank_table_size = 0;
             uint32_t stream_table_size = 0;
-            [[maybe_unused]] uint32_t external_stream_table_size = 0;
+            uint32_t external_stream_table_size = 0;
         } AudioPackHeader;
         DRAGON_ASSERT(sizeof(AudioPackHeader) == 28, "Wem Audio Pack header has an invalid size");
 
@@ -96,22 +96,22 @@ namespace dragon {
         dragon::Array<AudioPackEntry> sound_streams;
         dragon::Array<AudioPackEntry64> external_sound_streams;
 
-        [[maybe_unused]] DRAGON_AKPK_STRING_TYPE get_name(uint32_t id) {
+        DRAGON_AKPK_STRING_TYPE get_name(uint32_t id) {
             if (!names.contains(id)) {
                 return DRAGON_AKPK_STRING_TYPE();
             }
             return names[id];
         }
 
-        [[maybe_unused]] dragon::Array<uint8_t> get_bank(AudioPackEntry entry) {
+        dragon::Array<uint8_t> get_bank(AudioPackEntry entry) {
             return dragon::Array<uint8_t>(base_stream, entry.offset * entry.alignment, entry.size);
         }
 
-        [[maybe_unused]] dragon::Array<uint8_t> get_sound_stream(AudioPackEntry entry) {
+        dragon::Array<uint8_t> get_sound_stream(AudioPackEntry entry) {
             return dragon::Array<uint8_t>(base_stream, entry.offset * entry.alignment, entry.size);
         }
 
-        [[maybe_unused]] dragon::Array<uint8_t> get_external_sound_streams(AudioPackEntry64 entry) {
+        dragon::Array<uint8_t> get_external_sound_streams(AudioPackEntry64 entry) {
             return dragon::Array<uint8_t>(base_stream, entry.offset * entry.alignment, entry.size);
         }
     };

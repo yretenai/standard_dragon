@@ -20,44 +20,24 @@ namespace dragon {
         size_t Length = 0;
         uintptr_t Offset = 0;
 
-        class Iterator {
+        struct Iterator {
+            using iterator_category = std::forward_iterator_tag;
+            using difference_type   = std::ptrdiff_t;
+            using value_type        = T;
+            using pointer           = T*;
+            using reference         = T&;
+
+            explicit Iterator(pointer ptr) : m_ptr(ptr) {}
+
+            reference operator*() const { return *m_ptr; }
+            pointer operator->() { return m_ptr; }
+            Iterator& operator++() { m_ptr++; return *this; }
+            Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
+            friend bool operator== (const Iterator& a, const Iterator& b) { return a.m_ptr == b.m_ptr; };
+            friend bool operator!= (const Iterator& a, const Iterator& b) { return a.m_ptr != b.m_ptr; };
+
           private:
-            const Array<T>* Parent;
-            size_t Index;
-
-          public:
-            Iterator() {
-                Parent = nullptr;
-                Index = 0;
-            }
-
-            explicit Iterator(const Array<T>* parent, size_t index = 0) {
-                Parent = parent;
-                Index = index;
-            }
-
-            bool operator==(const Iterator& rhs) const {
-                return Parent->Pointer == rhs.Parent->Pointer && Index == rhs.Index && Parent->size() == rhs.Parent->size() &&
-                       Parent->Offset == rhs.Parent->Offset;
-            }
-
-            bool operator!=(const Iterator& rhs) const { return !(*this == rhs); }
-
-            T operator*() const { return Parent->get(Index); }
-
-            Iterator& operator++() {
-                if (Index >= Parent->size()) {
-                    throw out_of_bounds_exception();
-                }
-                Index++;
-                return *this;
-            }
-
-            Iterator operator++(int) {
-                Iterator temp(*this);
-                ++*this;
-                return temp;
-            }
+            pointer m_ptr;
         };
 
         Array() = default;
@@ -103,90 +83,90 @@ namespace dragon {
                 Length = length + offset;
         }
 
-        template <typename U> [[maybe_unused]] static Array<T> ptr_cast(U* buffer, size_t size) {
+        template <typename U> static Array<T> ptr_cast(U* buffer, size_t size) {
             return Array<T>(reinterpret_cast<T*>(buffer), size * sizeof(U) / sizeof(T), false);
         }
 
-        [[maybe_unused]] T& operator[](uintptr_t index) const { return get(index); }
+        T& operator[](uintptr_t index) const { return get(index); }
 
-        [[maybe_unused]] T& get(uintptr_t index) const {
+        T& get(uintptr_t index) const {
             if (index < 0 || index >= this->size()) {
                 throw out_of_bounds_exception();
             }
             return data()[index];
         }
 
-        [[maybe_unused]] void set(uintptr_t index, T value) const {
+        void set(uintptr_t index, T value) const {
             if (index < 0 || index >= this->size()) {
                 throw out_of_bounds_exception();
             }
             data()[index] = value;
         }
 
-        template <typename U> [[maybe_unused]] U cast(uintptr_t index) {
+        template <typename U> U cast(uintptr_t index) {
             if (index < 0 || index >= this->size()) {
                 throw out_of_bounds_exception();
             }
             return reinterpret_cast<U*>(data() + index)[0];
         }
 
-        template <typename U> [[maybe_unused]] U lpcast(uintptr_t* index) {
+        template <typename U> U lpcast(uintptr_t* index) {
             U tmp = cast<U>(*index);
             *index += sizeof(U) / sizeof(T);
             return tmp;
         }
 
-        template <typename U> [[maybe_unused]] Array<U> cast(uintptr_t index, size_t size) {
+        template <typename U> Array<U> cast(uintptr_t index, size_t size) {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
                 throw out_of_bounds_exception();
             }
             return Array<U>(reinterpret_cast<U*>(data() + index), size, false);
         }
 
-        template <typename U> [[maybe_unused]] Array<U> lpcast(uintptr_t* index, size_t size) {
+        template <typename U> Array<U> lpcast(uintptr_t* index, size_t size) {
             Array<U> tmp = cast<U>(*index, size);
             (*index) += size * sizeof(U) / sizeof(T);
             return tmp;
         }
 
-        [[maybe_unused]] Array<T> slice(uintptr_t index, size_t size) {
+        Array<T> slice(uintptr_t index, size_t size) {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
                 throw out_of_bounds_exception();
             }
             return Array<T>((data() + index), size, false);
         }
 
-        [[maybe_unused]] Array<T> shift(uintptr_t index) {
+        Array<T> shift(uintptr_t index) {
             if (index < 0 || index >= this->size()) {
                 throw out_of_bounds_exception();
             }
             return Array<T>(this, index);
         }
 
-        [[maybe_unused]] Array<T> lpslice(uintptr_t* index, size_t size) {
+        Array<T> lpslice(uintptr_t* index, size_t size) {
             Array<T> tmp = slice(*index, size);
             (*index) += size;
             return tmp;
         }
 
-        [[maybe_unused]] void copy(uintptr_t ptr, uintptr_t index, size_t size) {
+        void copy(uintptr_t ptr, uintptr_t index, size_t size) {
             if (size < 0 || size >= this->size()) {
                 throw out_of_bounds_exception();
             }
             std::copy_n((data() + index), size, reinterpret_cast<T*>(ptr));
         }
 
-        [[maybe_unused]] void lpcopy(uintptr_t* ptr, uintptr_t* index, size_t size) {
+        void lpcopy(uintptr_t* ptr, uintptr_t* index, size_t size) {
             copy(*ptr, *index, size);
             (*ptr) += size * sizeof(T);
             (*index) += size;
         }
 
-        [[maybe_unused]] std::string to_string() {
+        std::string to_string() {
             return std::string(reinterpret_cast<char*>(data()), size());
         }
 
-        [[maybe_unused]] std::wstring to_wstring() {
+        std::wstring to_wstring() {
             if (sizeof(T) == sizeof(char)) {
                 return std::wstring(this->to_string());
             }
@@ -194,30 +174,30 @@ namespace dragon {
             return std::wstring(reinterpret_cast<wchar_t*>(data()), size());
         }
 
-        [[maybe_unused]] std::istringstream to_string_stream() {
+        std::istringstream to_string_stream() {
             return std::istringstream(reinterpret_cast<char*>(data()), size());
         }
 
-        [[maybe_unused]] std::istream to_stream() { return std::istream(reinterpret_cast<char*>(data()), byte_size()); }
+        std::istream to_stream() { return std::istream(reinterpret_cast<char*>(data()), byte_size()); }
 
-        [[maybe_unused]] std::vector<T> to_vector() { return std::vector<T>(data(), data() + size()); }
+        std::vector<T> to_vector() { return std::vector<T>(data(), data() + size()); }
 
-        [[maybe_unused]] T* data() const { return Pointer.get() + Offset; }
+        T* data() const { return Pointer.get() + Offset; }
 
-        [[maybe_unused]] std::shared_ptr<T[]> pointer() const { return Pointer; }
+        std::shared_ptr<T[]> pointer() const { return Pointer; }
 
-        [[maybe_unused]] [[nodiscard]] size_t size() const { return Length - Offset; }
+        [[nodiscard]] size_t size() const { return Length - Offset; }
 
-        [[maybe_unused]] [[nodiscard]] size_t byte_size() const { return size() * sizeof(T); }
+        [[nodiscard]] size_t byte_size() const { return size() * sizeof(T); }
 
-        [[maybe_unused]] [[nodiscard]] bool empty() const { return this->size() <= 0 || this->Pointer == nullptr; }
+        [[nodiscard]] bool empty() const { return this->size() <= 0 || this->Pointer == nullptr; }
 
-        [[maybe_unused]] Iterator begin() const { return Iterator(this, 0); }
+        Iterator begin() const { return Iterator(data()); }
 
-        [[maybe_unused]] Iterator end() const { return Iterator(this, size()); }
+        Iterator end() const { return Iterator(data() + size()); }
 
 #if USE_NOESIS
-        [[maybe_unused]] T* to_noesis(noeRAPI_t* rapi) {
+        T* to_noesis(noeRAPI_t* rapi) {
             T* buffer = (T*)rapi->Noesis_UnpooledAlloc(byte_size());
             std::copy_n(begin(), size(), buffer);
             return buffer;

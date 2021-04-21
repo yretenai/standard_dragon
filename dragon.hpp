@@ -69,14 +69,14 @@
 #define DRAGON_EPRINTF(...) fprintf(stderr, __VA_ARGS__)
 
 namespace dragon {
-    [[maybe_unused]] inline int Align(int value, int align) {
+    inline int Align(int value, int align) {
         int v = value % align;
         if (v != 0)
             return value + align - v;
         return value;
     }
 
-    [[maybe_unused]] inline Array<uint8_t> read_file(const std::filesystem::path& path) {
+    inline Array<uint8_t> read_file(const std::filesystem::path& path) {
 #ifdef DRAGON_TOOLS
         DRAGON_LOG("Reading file " << path);
 #endif
@@ -89,7 +89,7 @@ namespace dragon {
         return bytes;
     }
 
-    [[maybe_unused]] inline void write_file(const std::filesystem::path& path, const Array<uint8_t>& buffer) {
+    inline void write_file(const std::filesystem::path& path, const Array<uint8_t>& buffer) {
         if (buffer.empty())
             return;
 #ifdef DRAGON_TOOLS
