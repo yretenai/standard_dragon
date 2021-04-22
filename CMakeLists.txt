@@ -59,10 +59,8 @@ target_include_directories(standard_dragon INTERFACE $<BUILD_INTERFACE:${PROJECT
 target_compile_features(standard_dragon INTERFACE cxx_std_20)
 
 if (MSVC)
-    set(STANDARD_DRAGON_ADD_NATVIS TRUE)
-    set(STANDARD_DRAGON_NATVIS_FILE include/standard_dragon/standard_dragon.natvis)
-    target_sources(standard_dragon INTERFACE $<INSTALL_INTERFACE:${STANDARD_DRAGON_NATVIS_FILE}>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${STANDARD_DRAGON_NATVIS_FILE}>)
+    target_sources(standard_dragon INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/standard_dragon.natvis>
+            $<INSTALL_INTERFACE:lib/cmake/standard_dragon/standard_dragon.natvis>)
 endif()
 
 include(GNUInstallDirs)
@@ -86,11 +84,8 @@ configure_package_config_file(
         "${PROJECT_BINARY_DIR}/standard_dragonConfig.cmake"
         INSTALL_DESTINATION lib/cmake/standard_dragon)
 
-if (STANDARD_DRAGON_ADD_NATVIS)
-    install(FILES ${STANDARD_DRAGON_NATVIS_FILE} DESTINATION include/standard_dragon/standard_dragon.natvis)
-endif()
-
 install(EXPORT standard_dragonTargets DESTINATION lib/cmake/standard_dragon)
+install(FILES standard_dragon.natvis DESTINATION lib/cmake/standard_dragon)
 install(FILES
         "${PROJECT_BINARY_DIR}/standard_dragonConfigVersion.cmake"
         "${PROJECT_BINARY_DIR}/standard_dragonConfig.cmake"
