@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+    <Type Name="dragon::Array&lt;*&gt;">
+        <Intrinsic Name="size"
+                   Expression="Length - Offset" />
+        <Intrinsic Name="ptr"
+                   Expression="Pointer._Ptr + Offset" />
+        <DisplayString>{{ Size={size()} }}</DisplayString>
+        <Expand>
+            <Item Name="[length]" ExcludeView="simple">Length</Item>
+            <Item Name="[offset]" ExcludeView="simple">Offset</Item>
+            <Item Name="[ptr]" ExcludeView="simple">ptr()</Item>
+            <ArrayItems>
+                <Size>size()</Size>
+                <ValuePointer>ptr()</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>
+    <Type Name="dragon::Indent">
+        <Intrinsic Name="level"
+                   Expression="level" />
+        <DisplayString>{{ Level={level()} }}</DisplayString>
+    </Type>
+</AutoVisualizer>
