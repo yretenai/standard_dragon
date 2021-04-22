@@ -2,7 +2,7 @@
 // Created by Lilith on 2020-10-04.
 //
 
-#include "../../WemAudioPack.hpp"
+#include <standard_dragon/WemAudioPack.hpp>
 
 void process_file(const std::filesystem::path& output, const std::filesystem::path& path) {
     dragon::Array<uint8_t> buffer = dragon::read_file(path);

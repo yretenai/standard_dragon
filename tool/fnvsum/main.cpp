@@ -2,8 +2,8 @@
 // Created by Lilith on 2020-10-04.
 //
 
-#include "../../hash/fnv1a.hpp"
-#include "../../dragon.hpp"
+#include <standard_dragon/hash/fnv1a.hpp>
+#include <standard_dragon/dragon.hpp>
 
 #ifdef DRAGON_FNVMODE_32
 #define DRAGON_FNV dragon::hash::fnv1_32

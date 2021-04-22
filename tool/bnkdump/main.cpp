@@ -2,8 +2,8 @@
 // Created by Lilith on 2020-11-12.
 //
 
-#include "../../WemSoundbank.hpp"
-#include "../../Indent.hpp"
+#include <standard_dragon/WemSoundbank.hpp>
+#include <standard_dragon/Indent.hpp>
 
 void process_file(const std::filesystem::path& path) {
     dragon::Array<uint8_t> buffer = dragon::read_file(path);

@@ -59,17 +59,17 @@ namespace dragon {
 
         static constexpr uint32_t AKPK_FOURCC = DRAGON_MAGIC32('A', 'K', 'P', 'K');
 
-        WemAudioPack(dragon::Array<uint8_t> buffer) {
-            AudioPackHeader header = buffer.cast<AudioPackHeader>(0);
+        explicit WemAudioPack(dragon::Array<uint8_t> buffer) {
+            auto header = buffer.cast<AudioPackHeader>(0);
             if (header.fourcc != AKPK_FOURCC) {
                 DRAGON_ELOG("Not a AKPK file");
                 return;
             }
 
-            base_stream = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size(), nullptr);
+            base_stream = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size(), true);
 
             size_t cursor = sizeof(AudioPackHeader);
-            uint32_t count = buffer.cast<uint32_t>(cursor);
+            auto count = buffer.cast<uint32_t>(cursor);
             for (const AudioPackName& name_entry : buffer.cast<AudioPackName>(cursor + 4, count)) {
                 names[name_entry.id] = DRAGON_AKPK_STRING_TYPE(reinterpret_cast<DRAGON_AKPK_CHAR_TYPE*>(buffer.data() + cursor + name_entry.offset));
             }
@@ -103,15 +103,15 @@ namespace dragon {
             return names[id];
         }
 
-        dragon::Array<uint8_t> get_bank(AudioPackEntry entry) {
+        [[nodiscard]] dragon::Array<uint8_t> get_bank(AudioPackEntry entry) const {
             return dragon::Array<uint8_t>(base_stream, entry.offset * entry.alignment, entry.size);
         }
 
-        dragon::Array<uint8_t> get_sound_stream(AudioPackEntry entry) {
+        [[nodiscard]] dragon::Array<uint8_t> get_sound_stream(AudioPackEntry entry) const {
             return dragon::Array<uint8_t>(base_stream, entry.offset * entry.alignment, entry.size);
         }
 
-        dragon::Array<uint8_t> get_external_sound_streams(AudioPackEntry64 entry) {
+        [[nodiscard]] dragon::Array<uint8_t> get_external_sound_streams(AudioPackEntry64 entry) const {
             return dragon::Array<uint8_t>(base_stream, entry.offset * entry.alignment, entry.size);
         }
     };

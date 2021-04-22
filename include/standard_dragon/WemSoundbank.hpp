@@ -40,11 +40,11 @@ namespace dragon {
         static constexpr uint32_t STMG_FOURCC = DRAGON_MAGIC32('S', 'T', 'M', 'G');
         static constexpr uint32_t STID_FOURCC = DRAGON_MAGIC32('S', 'T', 'I', 'D');
 
-        WemSoundbank(dragon::Array<uint8_t> buffer) {
-            base_stream = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size(), nullptr);
+        explicit WemSoundbank(const dragon::Array<uint8_t>& buffer) {
+            base_stream = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size(), true);
             uintptr_t ptr = 0;
             while (ptr < base_stream->size()) {
-                BnkChunkHeader header = base_stream->lpcast<BnkChunkHeader>(&ptr);
+                auto header = base_stream->lpcast<BnkChunkHeader>(&ptr);
                 chunks[header.fourcc] = std::pair<uintptr_t, BnkChunkHeader>(ptr, header);
                 switch (header.fourcc) {
                 case BKHD_FOURCC:

@@ -30,12 +30,11 @@ if(NOESIS_INCLUDE_DIR)
         message(FATAL_ERROR "NOESIS_INCLUDE_DIR is specified but noesis/pluginsupport.cpp is missing!")
     endif()
 
-    target_compile_definitions(standard_dragon USE_NOESIS)
-    target_include_directories(standard_dragon PRIVATE ${NOESIS_INCLUDE_DIR})
-    set(NOESIS_API_SOURCES "${NOESIS_INCLUDE_DIR}/noesisplugin.cpp" "${NOESIS_INCLUDE_DIR}/pluginsupport.cpp"
+    add_library(noesis STATIC "${NOESIS_INCLUDE_DIR}/noesisplugin.cpp" "${NOESIS_INCLUDE_DIR}/pluginsupport.cpp"
             "${NOESIS_INCLUDE_DIR}/NoeSRShared.h" "${NOESIS_INCLUDE_DIR}/pluginbasetypes.h"
             "${NOESIS_INCLUDE_DIR}/pluginclasses.h" "${NOESIS_INCLUDE_DIR}/pluginshare.h")
-    target_sources(standard_dragon INTERFACE $<BUILD_INTERFACE:${NOESIS_API_SOURCES}>)
+    target_compile_definitions(standard_dragon USE_NOESIS)
+    target_link_libraries(standard_dragon noesis)
 endif()
 
 if (MSVC)
@@ -51,8 +50,6 @@ if (MSVC)
 endif()
 
 if(DRAGON_TOOLS)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
     add_compile_definitions(DRAGON_TOOLS)
     add_subdirectory(tool)
 endif()
