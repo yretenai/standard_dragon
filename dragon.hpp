@@ -18,7 +18,7 @@
 #define DRAGON_MAGIC32(ch0, ch1, ch2, ch3) \
     ((uint32_t)(uint8_t)(ch0) | ((uint32_t)(uint8_t)(ch1) << 8) | ((uint32_t)(uint8_t)(ch2) << 16) | ((uint32_t)(uint8_t)(ch3) << 24))
 
-#define DRAGON_MAGIC64(ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7) \
+#define DRAGON_MAGIC64(ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7)                                                                          \
     ((uint32_t)(uint8_t)(ch0) | ((uint32_t)(uint8_t)(ch1) << 8) | ((uint32_t)(uint8_t)(ch2) << 16) | ((uint32_t)(uint8_t)(ch3) << 24) | \
      ((uint32_t)(uint8_t)(ch4) << 32) | ((uint32_t)(uint8_t)(ch5) << 40) | ((uint32_t)(uint8_t)(ch6) << 48) | ((uint32_t)(uint8_t)(ch7) << 56))
 
@@ -88,7 +88,7 @@ namespace dragon {
         auto size = (size_t)std::filesystem::file_size(path);
         Array<uint8_t> bytes(size, nullptr);
         file.seekg(0, std::ios::beg);
-        file.read(reinterpret_cast<char*>(bytes.data()), size);
+        file.read(reinterpret_cast<char*>(bytes.data()), (std::streamsize)size);
         file.close();
         return bytes;
     }
@@ -104,7 +104,7 @@ namespace dragon {
         }
 #endif
         std::ofstream file(path, std::ios::binary | std::ios::out | std::ios::trunc);
-        file.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());
+        file.write(reinterpret_cast<const char*>(buffer.data()), (std::streamsize)buffer.size());
         file.flush();
         file.close();
     }

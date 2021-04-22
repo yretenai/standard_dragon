@@ -22,19 +22,26 @@ namespace dragon {
 
         struct Iterator {
             using iterator_category = std::forward_iterator_tag;
-            using difference_type   = std::ptrdiff_t;
-            using value_type        = T;
-            using pointer           = T*;
-            using reference         = T&;
+            using difference_type = std::ptrdiff_t;
+            using value_type = T;
+            using pointer = T*;
+            using reference = T&;
 
             explicit Iterator(pointer ptr) : m_ptr(ptr) {}
 
             reference operator*() const { return *m_ptr; }
             pointer operator->() { return m_ptr; }
-            Iterator& operator++() { m_ptr++; return *this; }
-            Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
-            friend bool operator== (const Iterator& a, const Iterator& b) { return a.m_ptr == b.m_ptr; };
-            friend bool operator!= (const Iterator& a, const Iterator& b) { return a.m_ptr != b.m_ptr; };
+            Iterator& operator++() {
+                m_ptr++;
+                return *this;
+            }
+            Iterator operator++(int) {
+                Iterator tmp = *this;
+                ++(*this);
+                return tmp;
+            }
+            friend bool operator==(const Iterator& a, const Iterator& b) { return a.m_ptr == b.m_ptr; };
+            friend bool operator!=(const Iterator& a, const Iterator& b) { return a.m_ptr != b.m_ptr; };
 
           private:
             pointer m_ptr;
@@ -42,7 +49,7 @@ namespace dragon {
 
         Array() = default;
 
-        explicit Array(std::vector<T> vector) : Array(vector.data(), vector.size(), true) { }
+        explicit Array(std::vector<T> vector) : Array(vector.data(), vector.size(), true) {}
 
         Array(T* buffer, size_t size, bool copy) {
             if (copy) {
@@ -162,9 +169,7 @@ namespace dragon {
             (*index) += size;
         }
 
-        std::string to_string() {
-            return std::string(reinterpret_cast<char*>(data()), size());
-        }
+        std::string to_string() { return std::string(reinterpret_cast<char*>(data()), size()); }
 
         std::wstring to_wstring() {
             if (sizeof(T) == sizeof(char)) {
@@ -174,11 +179,9 @@ namespace dragon {
             return std::wstring(reinterpret_cast<wchar_t*>(data()), size());
         }
 
-        std::istringstream to_string_stream() {
-            return std::istringstream(reinterpret_cast<char*>(data()), size());
-        }
+        std::istringstream to_string_stream() { return std::istringstream(reinterpret_cast<char*>(data()), size()); }
 
-        std::istream to_stream() { return std::istream(reinterpret_cast<char*>(data()), byte_size()); }
+        std::iostream to_stream() { return std::iostream(reinterpret_cast<char*>(data()), byte_size()); }
 
         std::vector<T> to_vector() { return std::vector<T>(data(), data() + size()); }
 
