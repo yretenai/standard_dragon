@@ -20,8 +20,6 @@ namespace dragon::bkhd {
             return dragon::Array<uint8_t>(data, entry.offset, entry.size);
         }
 
-        [[nodiscard]] dragon::Array<uint8_t> get_stream(WemDataIndex* index, uint32_t id) const {
-            return get_stream(index->streams[id]);
-        }
+        [[nodiscard]] dragon::Array<uint8_t> get_stream(WemDataIndex* index, uint32_t id) const { return get_stream(index->streams[id]); }
     };
-}
+} // namespace dragon::bkhd

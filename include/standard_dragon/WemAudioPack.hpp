@@ -7,8 +7,8 @@
 #include "Array.hpp"
 #include "dragon.hpp"
 #include <cassert>
-#include <cstdint>
 #include <cstdbool>
+#include <cstdint>
 #include <map>
 #include <memory>
 #include <string>
@@ -36,8 +36,7 @@ namespace dragon {
         } AudioPackHeader;
         DRAGON_ASSERT(sizeof(AudioPackHeader) == 28, "Wem Audio Pack header has an invalid size");
 
-        template<typename T>
-        struct AUDIO_PACK_ENTRY {
+        template <typename T> struct AUDIO_PACK_ENTRY {
             T id = 0;
             uint32_t alignment = 0;
             uint32_t size = 0;

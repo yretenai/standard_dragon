@@ -14,8 +14,8 @@
 #include "bkhd/WemSoundTypeGroup.hpp"
 #include "bkhd/WemSoundTypeId.hpp"
 #include "dragon.hpp"
-#include <cstdint>
 #include <cstdbool>
+#include <cstdint>
 #include <map>
 #include <memory>
 

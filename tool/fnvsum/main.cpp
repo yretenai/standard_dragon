@@ -2,8 +2,8 @@
 // Created by Lilith on 2020-10-04.
 //
 
-#include <standard_dragon/hash/fnv1a.hpp>
 #include <standard_dragon/dragon.hpp>
+#include <standard_dragon/hash/fnv1a.hpp>
 
 #ifdef DRAGON_FNVMODE_32
 #define DRAGON_FNV dragon::hash::fnv1_32
@@ -37,8 +37,8 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    for(int i = 1; i < argc; ++i) {
-        auto hash = DRAGON_FNV(reinterpret_cast<const uint8_t *>(argv[i]), strlen(argv[i]), DRAGON_FNVBITS);
+    for (int i = 1; i < argc; ++i) {
+        auto hash = DRAGON_FNV(reinterpret_cast<const uint8_t*>(argv[i]), strlen(argv[i]), DRAGON_FNVBITS);
         std::cout << std::hex << hash << "\t" << std::dec << hash << "\t" << argv[i] << std::endl;
     }
 }

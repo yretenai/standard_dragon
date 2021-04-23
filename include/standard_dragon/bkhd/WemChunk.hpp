@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include <cstdint>
 #include "../dragon.hpp"
+#include <cstdint>
 
 namespace dragon::bkhd {
     class WemChunk {
       public:
         virtual ~WemChunk() noexcept = default;
     };
-}
+} // namespace dragon::bkhd

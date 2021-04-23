@@ -2,29 +2,30 @@
 // Created by Lilith on 2020-11-12.
 //
 
-#include <standard_dragon/WemSoundbank.hpp>
 #include <standard_dragon/Indent.hpp>
+#include <standard_dragon/WemSoundbank.hpp>
 
 void process_file(const std::filesystem::path& path) {
     dragon::Array<uint8_t> buffer = dragon::read_file(path);
     dragon::WemSoundbank bank(buffer);
     std::filesystem::path full = path.parent_path() / path.filename().replace_extension();
-    if(!std::filesystem::exists(full)) std::filesystem::create_directories(full);
+    if (!std::filesystem::exists(full))
+        std::filesystem::create_directories(full);
 
     // process DIDX
     std::shared_ptr<dragon::bkhd::WemChunk> didx_chunk = bank.get_chunk_impl(dragon::WemSoundbank::DIDX_FOURCC);
     std::shared_ptr<dragon::bkhd::WemChunk> data_chunk = bank.get_chunk_impl(dragon::WemSoundbank::DATA_FOURCC);
-    if(didx_chunk != nullptr && data_chunk != nullptr) {
+    if (didx_chunk != nullptr && data_chunk != nullptr) {
         dragon::bkhd::WemDataIndex* didx = CAST_WEMBNK_CHUNK(dragon::bkhd::WemDataIndex, didx_chunk);
         dragon::bkhd::WemData* data = CAST_WEMBNK_CHUNK(dragon::bkhd::WemData, didx_chunk);
-        for(auto entry : didx->streams) {
+        for (auto entry : didx->streams) {
             dragon::write_file(full / (std::to_string(entry.first) + ".wem"), data->get_stream(entry.second));
         }
     }
 
     // process HIRC
     std::shared_ptr<dragon::bkhd::WemChunk> hirc_chunk = bank.get_chunk_impl(dragon::WemSoundbank::HIRC_FOURCC);
-    if(hirc_chunk != nullptr) {
+    if (hirc_chunk != nullptr) {
         // dragon::bkhd::WemHierarchy* hirc = CAST_WEMBNK_CHUNK(dragon::bkhd::WemHierarchy, didx_chunk);
         dragon::Indent indent(0);
     }

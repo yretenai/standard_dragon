@@ -23,12 +23,10 @@ namespace dragon::bkhd {
         WemDataIndex(dragon::Array<uint8_t> buffer) {
             dragon::Array<DataIndexEntry> didx = buffer.cast<DataIndexEntry>(0, buffer.size() / sizeof(DataIndexEntry));
             for (DataIndexEntry entry : didx) {
-                streams[entry.id] =  entry;
+                streams[entry.id] = entry;
             }
         }
 
-        bool has_stream(uint32_t id) {
-            return streams.find(id) != streams.end();
-        }
+        bool has_stream(uint32_t id) { return streams.find(id) != streams.end(); }
     };
-}
+} // namespace dragon::bkhd
