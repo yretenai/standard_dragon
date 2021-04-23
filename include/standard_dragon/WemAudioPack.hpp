@@ -7,7 +7,6 @@
 #include "Array.hpp"
 #include "dragon.hpp"
 #include <cassert>
-#include <cstdbool>
 #include <cstdint>
 #include <map>
 #include <memory>

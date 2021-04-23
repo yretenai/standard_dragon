@@ -9,16 +9,17 @@ add_library(standard_dragon INTERFACE)
 target_include_directories(standard_dragon INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 target_compile_features(standard_dragon INTERFACE cxx_std_20)
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
+    target_compile_definitions(standard_dragon INTERFACE _WIN32_CLANG)
+    target_compile_definitions(standard_dragon INTERFACE _CRT_SECURE_NO_WARNINGS)
+endif ()
+
 if (MSVC)
     target_sources(standard_dragon INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/standard_dragon.natvis>
             $<INSTALL_INTERFACE:lib/cmake/standard_dragon/standard_dragon.natvis>)
     target_compile_definitions(standard_dragon INTERFACE _CRT_SECURE_NO_WARNINGS)
-    if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-        target_compile_options(standard_dragon INTERFACE -EHs)
-    endif ()
-    if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        target_compile_definitions(standard_dragon INTERFACE _WIN32_CLANG)
-    endif ()
+    target_compile_options(standard_dragon INTERFACE "/wd4068")
+    target_compile_options(standard_dragon INTERFACE "/std:c++latest")
 endif ()
 
 if (DRAGON_TOOLS)
