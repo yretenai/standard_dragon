@@ -198,13 +198,5 @@ namespace dragon {
         Iterator begin() const { return Iterator(data()); }
 
         Iterator end() const { return Iterator(data() + size()); }
-
-#if USE_NOESIS
-        T* to_noesis(noeRAPI_t* rapi) {
-            T* buffer = (T*)rapi->Noesis_UnpooledAlloc(byte_size());
-            std::copy_n(begin(), size(), buffer);
-            return buffer;
-        }
-#endif
     };
 } // namespace dragon
