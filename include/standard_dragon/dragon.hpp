@@ -14,13 +14,14 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <type_traits>
 
 #define DRAGON_MAGIC32(ch0, ch1, ch2, ch3) \
-    ((uint32_t)(uint8_t)(ch0) | ((uint32_t)(uint8_t)(ch1) << 8) | ((uint32_t)(uint8_t)(ch2) << 16) | ((uint32_t)(uint8_t)(ch3) << 24))
+    ((uint32_t) (uint8_t) (ch0) | ((uint32_t) (uint8_t) (ch1) << 8) | ((uint32_t) (uint8_t) (ch2) << 16) | ((uint32_t) (uint8_t) (ch3) << 24))
 
-#define DRAGON_MAGIC64(ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7)                                                                          \
-    ((uint32_t)(uint8_t)(ch0) | ((uint32_t)(uint8_t)(ch1) << 8) | ((uint32_t)(uint8_t)(ch2) << 16) | ((uint32_t)(uint8_t)(ch3) << 24) | \
-     ((uint32_t)(uint8_t)(ch4) << 32) | ((uint32_t)(uint8_t)(ch5) << 40) | ((uint32_t)(uint8_t)(ch6) << 48) | ((uint32_t)(uint8_t)(ch7) << 56))
+#define DRAGON_MAGIC64(ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7)                                                                                  \
+    ((uint32_t) (uint8_t) (ch0) | ((uint32_t) (uint8_t) (ch1) << 8) | ((uint32_t) (uint8_t) (ch2) << 16) | ((uint32_t) (uint8_t) (ch3) << 24) | \
+     ((uint32_t) (uint8_t) (ch4) << 32) | ((uint32_t) (uint8_t) (ch5) << 40) | ((uint32_t) (uint8_t) (ch6) << 48) | ((uint32_t) (uint8_t) (ch7) << 56))
 
 #define DRAGON_ASSERT static_assert
 
@@ -65,7 +66,8 @@
 #define BITLOG64(value) std::bitset<64>(value)
 
 #ifndef DRAGON_OLOG
-#define DRAGON_OLOG(out, msg) (out << msg << std::endl << std::flush)
+#define DRAGON_OLOG(out, msg) (out << msg << std::endl \
+                                   << std::flush)
 #endif
 
 #define DRAGON_LOG(msg) DRAGON_OLOG(std::cout, "[o][" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg)
@@ -73,27 +75,28 @@
 #define DRAGON_EPRINTF(...) fprintf(stderr, __VA_ARGS__)
 
 namespace dragon {
-    inline int Align(int value, int align) {
-        int v = value % align;
+    template<typename T>
+    inline typename std::enable_if<std::is_integral<T>::value, T>::type Align(T value, T align) {
+        T v = value % align;
         if (v != 0)
             return value + align - v;
         return value;
     }
 
-    inline Array<uint8_t> read_file(const std::filesystem::path& path) {
+    inline Array<uint8_t> read_file(const std::filesystem::path &path) {
 #ifdef DRAGON_TOOLS
         DRAGON_LOG("Reading file " << path);
 #endif
         std::ifstream file(path, std::ios::binary | std::ios::in);
-        auto size = (size_t)std::filesystem::file_size(path);
+        auto size = (size_t) std::filesystem::file_size(path);
         Array<uint8_t> bytes(size, nullptr);
         file.seekg(0, std::ios::beg);
-        file.read(reinterpret_cast<char*>(bytes.data()), (std::streamsize)size);
+        file.read(reinterpret_cast<char *>(bytes.data()), (std::streamsize) size);
         file.close();
         return bytes;
     }
 
-    inline void write_file(const std::filesystem::path& path, const Array<uint8_t>& buffer) {
+    inline void write_file(const std::filesystem::path &path, const Array<uint8_t> &buffer) {
         if (buffer.empty())
             return;
 #ifdef DRAGON_TOOLS
@@ -104,7 +107,7 @@ namespace dragon {
         }
 #endif
         std::ofstream file(path, std::ios::binary | std::ios::out | std::ios::trunc);
-        file.write(reinterpret_cast<const char*>(buffer.data()), (std::streamsize)buffer.size());
+        file.write(reinterpret_cast<const char *>(buffer.data()), (std::streamsize) buffer.size());
         file.flush();
         file.close();
     }
