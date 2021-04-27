@@ -157,7 +157,7 @@ namespace dragon {
         }
 
         void copy(uintptr_t ptr, uintptr_t index, size_t size) {
-            if (size < 0 || size >= this->size()) {
+            if (size < 0 || size > this->size()) {
                 throw out_of_bounds_exception();
             }
             std::copy_n((data() + index), size, reinterpret_cast<T*>(ptr));
@@ -165,6 +165,19 @@ namespace dragon {
 
         void lpcopy(uintptr_t* ptr, uintptr_t* index, size_t size) {
             copy(*ptr, *index, size);
+            (*ptr) += size * sizeof(T);
+            (*index) += size;
+        }
+
+        void paste(uintptr_t ptr, uintptr_t index, size_t size) {
+            if (size < 0 || size > this->size()) {
+                throw out_of_bounds_exception();
+            }
+            std::copy_n(reinterpret_cast<T*>(ptr), size, (data() + index));
+        }
+
+        void lppaste(uintptr_t* ptr, uintptr_t* index, size_t size) {
+            paste(*ptr, *index, size);
             (*ptr) += size * sizeof(T);
             (*index) += size;
         }
