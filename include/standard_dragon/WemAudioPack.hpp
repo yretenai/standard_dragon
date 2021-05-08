@@ -22,7 +22,7 @@
 
 namespace dragon {
     class WemAudioPack {
-      public:
+    public:
 #pragma pack(push, 1)
         typedef struct AUDIO_PACK_HEADER {
             uint32_t fourcc = AKPK_FOURCC;
@@ -35,7 +35,8 @@ namespace dragon {
         } AudioPackHeader;
         DRAGON_ASSERT(sizeof(AudioPackHeader) == 28, "Wem Audio Pack header has an invalid size");
 
-        template <typename T> struct AUDIO_PACK_ENTRY {
+        template<typename T>
+        struct AUDIO_PACK_ENTRY {
             T id = 0;
             uint32_t alignment = 0;
             uint32_t size = 0;
@@ -68,8 +69,8 @@ namespace dragon {
 
             size_t cursor = sizeof(AudioPackHeader);
             auto count = buffer.cast<uint32_t>(cursor);
-            for (const AudioPackName& name_entry : buffer.cast<AudioPackName>(cursor + 4, count)) {
-                names[name_entry.id] = DRAGON_AKPK_STRING_TYPE(reinterpret_cast<DRAGON_AKPK_CHAR_TYPE*>(buffer.data() + cursor + name_entry.offset));
+            for (const AudioPackName &name_entry : buffer.cast<AudioPackName>(cursor + 4, count)) {
+                names[name_entry.id] = DRAGON_AKPK_STRING_TYPE(reinterpret_cast<DRAGON_AKPK_CHAR_TYPE *>(buffer.data() + cursor + name_entry.offset));
             }
 
             cursor += header.name_table_size;

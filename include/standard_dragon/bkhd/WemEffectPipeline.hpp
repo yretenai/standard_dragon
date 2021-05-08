@@ -8,7 +8,7 @@
 
 namespace dragon::bkhd {
     class WemEffectPipeline : public WemChunk {
-      public:
+    public:
         WemEffectPipeline(dragon::Array<uint8_t> buffer) {}
     };
 } // namespace dragon::bkhd

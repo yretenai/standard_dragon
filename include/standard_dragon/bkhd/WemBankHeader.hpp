@@ -8,7 +8,7 @@
 
 namespace dragon::bkhd {
     class WemBankHeader : public WemChunk {
-      public:
+    public:
         uint32_t version;
         uint32_t id;
 

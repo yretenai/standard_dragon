@@ -9,7 +9,7 @@
 
 namespace dragon::bkhd {
     class WemChunk {
-      public:
+    public:
         virtual ~WemChunk() noexcept = default;
     };
 } // namespace dragon::bkhd

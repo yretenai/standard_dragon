@@ -8,7 +8,7 @@
 
 namespace dragon::bkhd {
     class WemEnvironment : public WemChunk {
-      public:
+    public:
         WemEnvironment(dragon::Array<uint8_t> buffer) {}
     };
 } // namespace dragon::bkhd

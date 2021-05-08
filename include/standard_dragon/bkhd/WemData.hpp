@@ -9,10 +9,10 @@
 
 namespace dragon::bkhd {
     class WemData : public WemChunk {
-      public:
+    public:
         std::shared_ptr<dragon::Array<uint8_t>> data;
 
-        explicit WemData(const dragon::Array<uint8_t>& buffer) {
+        explicit WemData(const dragon::Array<uint8_t> &buffer) {
             data = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size(), true);
         }
 
@@ -20,6 +20,6 @@ namespace dragon::bkhd {
             return dragon::Array<uint8_t>(data, entry.offset, entry.size);
         }
 
-        [[nodiscard]] dragon::Array<uint8_t> get_stream(WemDataIndex* index, uint32_t id) const { return get_stream(index->streams[id]); }
+        [[nodiscard]] dragon::Array<uint8_t> get_stream(WemDataIndex *index, uint32_t id) const { return get_stream(index->streams[id]); }
     };
 } // namespace dragon::bkhd

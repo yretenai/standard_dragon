@@ -8,7 +8,7 @@
 
 namespace dragon::bkhd {
     class WemSoundTypeId : public WemChunk {
-      public:
+    public:
         WemSoundTypeId(dragon::Array<uint8_t> buffer) {}
     };
 } // namespace dragon::bkhd

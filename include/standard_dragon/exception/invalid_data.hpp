@@ -10,11 +10,11 @@
 
 namespace dragon::exception {
     class invalid_data : public std::exception {
-      public:
+    public:
         std::string reason_message;
-        explicit invalid_data(const char* message = "invalid or unexpected data") { reason_message = message; }
+        explicit invalid_data(const char *message = "invalid or unexpected data") { reason_message = message; }
         explicit invalid_data(std::string message) { reason_message = std::move(message); }
 
-        [[nodiscard]] const char* what() const noexcept override { return reason_message.c_str(); }
+        [[nodiscard]] const char *what() const noexcept override { return reason_message.c_str(); }
     };
 } // namespace dragon::exception

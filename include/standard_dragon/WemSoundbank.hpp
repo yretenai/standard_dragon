@@ -22,7 +22,7 @@
 
 namespace dragon {
     class WemSoundbank {
-      public:
+    public:
 #pragma pack(push, 1)
         typedef struct BNK_CHUNK_HEADER {
             uint32_t fourcc = 0;
@@ -39,40 +39,40 @@ namespace dragon {
         static constexpr uint32_t STMG_FOURCC = DRAGON_MAGIC32('S', 'T', 'M', 'G');
         static constexpr uint32_t STID_FOURCC = DRAGON_MAGIC32('S', 'T', 'I', 'D');
 
-        explicit WemSoundbank(const dragon::Array<uint8_t>& buffer) {
+        explicit WemSoundbank(const dragon::Array<uint8_t> &buffer) {
             base_stream = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size(), true);
             uintptr_t ptr = 0;
             while (ptr < base_stream->size()) {
                 auto header = base_stream->lpcast<BnkChunkHeader>(&ptr);
                 chunks[header.fourcc] = std::pair<uintptr_t, BnkChunkHeader>(ptr, header);
                 switch (header.fourcc) {
-                case BKHD_FOURCC:
-                    parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemBankHeader>(get_chunk(header.fourcc));
-                    break;
-                case DATA_FOURCC:
-                    parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemData>(get_chunk(header.fourcc));
-                    break;
-                case DIDX_FOURCC:
-                    parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemDataIndex>(get_chunk(header.fourcc));
-                    break;
-                case FXPR_FOURCC:
-                    parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemEffectPipeline>(get_chunk(header.fourcc));
-                    break;
-                case ENVS_FOURCC:
-                    parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemEnvironment>(get_chunk(header.fourcc));
-                    break;
-                case HIRC_FOURCC:
-                    parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemHierarchy>(get_chunk(header.fourcc));
-                    break;
-                case STMG_FOURCC:
-                    parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemSoundTypeGroup>(get_chunk(header.fourcc));
-                    break;
-                case STID_FOURCC:
-                    parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemSoundTypeId>(get_chunk(header.fourcc));
-                    break;
-                default:
-                    DRAGON_ELOG("Unprocessed chunk " << header.fourcc);
-                    break;
+                    case BKHD_FOURCC:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemBankHeader>(get_chunk(header.fourcc));
+                        break;
+                    case DATA_FOURCC:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemData>(get_chunk(header.fourcc));
+                        break;
+                    case DIDX_FOURCC:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemDataIndex>(get_chunk(header.fourcc));
+                        break;
+                    case FXPR_FOURCC:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemEffectPipeline>(get_chunk(header.fourcc));
+                        break;
+                    case ENVS_FOURCC:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemEnvironment>(get_chunk(header.fourcc));
+                        break;
+                    case HIRC_FOURCC:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemHierarchy>(get_chunk(header.fourcc));
+                        break;
+                    case STMG_FOURCC:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemSoundTypeGroup>(get_chunk(header.fourcc));
+                        break;
+                    case STID_FOURCC:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemSoundTypeId>(get_chunk(header.fourcc));
+                        break;
+                    default:
+                        DRAGON_ELOG("Unprocessed chunk " << header.fourcc);
+                        break;
                 }
                 ptr += header.size;
             }

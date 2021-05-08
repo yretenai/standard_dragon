@@ -9,7 +9,7 @@
 
 namespace dragon::bkhd {
     class WemDataIndex : public WemChunk {
-      public:
+    public:
 #pragma pack(push, 1)
         typedef struct BNK_DIDX_ENTRY {
             uint32_t id = 0;
