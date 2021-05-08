@@ -26,31 +26,31 @@
 #define DRAGON_ASSERT static_assert
 
 #ifndef DRAGON_LIBRARY_NAME
-#define DRAGON_LIBRARY_NAME "dragon"
+#    define DRAGON_LIBRARY_NAME "dragon"
 #endif
 
 #define DRAGON_MAX_PATH 32767
 
 #ifdef _WIN32
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif // WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#    ifndef WIN32_LEAN_AND_MEAN
+#        define WIN32_LEAN_AND_MEAN
+#    endif // WIN32_LEAN_AND_MEAN
+#    include <Windows.h>
 #endif
 
 #ifndef NDEBUG
-#ifdef _WIN32
-#define DRAGON_BREAK __debugbreak()
+#    ifdef _WIN32
+#        define DRAGON_BREAK __debugbreak()
+#    else
+#        include <csignal>
+#        define DRAGON_BREAK raise(SIGTRAP)
+#    endif
 #else
-#include <csignal>
-#define DRAGON_BREAK raise(SIGTRAP)
-#endif
-#else
-#define DRAGON_BREAK
+#    define DRAGON_BREAK
 #endif
 
 #ifndef __PRETTY_FUNCTION__
-#define __PRETTY_FUNCTION__ __FUNCTION__
+#    define __PRETTY_FUNCTION__ __FUNCTION__
 #endif
 
 #define HEXLOG64 std::setfill('0') << std::hex << std::setw(16)
@@ -66,8 +66,8 @@
 #define BITLOG64(value) std::bitset<64>(value)
 
 #ifndef DRAGON_OLOG
-#define DRAGON_OLOG(out, msg) (out << msg << std::endl \
-                                   << std::flush)
+#    define DRAGON_OLOG(out, msg) (out << msg << std::endl \
+                                       << std::flush)
 #endif
 
 #define DRAGON_LOG(msg) DRAGON_OLOG(std::cout, "[o][" << DRAGON_LIBRARY_NAME << "][" << __PRETTY_FUNCTION__ << "] " << msg)
