@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <memory>
+#include <new>
 #include <sstream>
 #include <type_traits>
 #include <vector>
@@ -36,7 +37,7 @@ namespace dragon {
                 m_ptr++;
                 return *this;
             }
-            Iterator operator++(int) {
+            Iterator operator++(int) { // NOLINT(cert-dcl21-cpp)
                 Iterator tmp = *this;
                 ++(*this);
                 return tmp;
@@ -52,10 +53,28 @@ namespace dragon {
 
         explicit Array(std::vector<T> vector) : Array(vector.data(), vector.size(), true) {}
 
-        Array(T *buffer, size_t size, bool copy) {
+        Array(T *buffer, size_t size, bool copy, size_t alignment = __STDCPP_DEFAULT_NEW_ALIGNMENT__) {
+            if (alignment < 1) {
+                alignment = 1;
+            }
+
+            if (size < 1) {
+                size = 1;
+            }
+
+            if (!copy) {
+                if ((reinterpret_cast<uintptr_t>(buffer) % alignment) != 0) {
+                    copy = true;
+                }
+            }
+
             if (copy) {
-                Pointer = std::shared_ptr<T[]>(new T[size]);
-                std::copy_n(buffer, size, Pointer.get());
+                Pointer = std::shared_ptr<T[]>(new T[size + alignment - 1]);
+                auto delta = alignment_delta(alignment);
+                if (delta != 0) {
+                    Offset = alignment - delta;
+                }
+                std::copy_n(buffer, size, data());
             } else {
                 Pointer = std::shared_ptr<T[]>(buffer);
             }
@@ -64,16 +83,34 @@ namespace dragon {
 
         Array(std::shared_ptr<T[]> pointer, size_t size) {
             Pointer = pointer;
+
+            if (size < 1) {
+                size = 1;
+            }
+
             Length = size;
         }
 
-        Array(size_t size, const T *default_value) {
-            Pointer = std::shared_ptr<T[]>(new T[size]);
+        Array(size_t size, const T *default_value, size_t alignment = __STDCPP_DEFAULT_NEW_ALIGNMENT__) {
+            if (alignment < 1) {
+                alignment = 1;
+            }
+
+            if (size < 1) {
+                size = 1;
+            }
+
+            Pointer = std::shared_ptr<T[]>(new T[size + alignment - 1]);
             if (default_value != nullptr) {
-                for (size_t i = 0; i < size; ++i)
+                for (size_t i = 0; i < size + alignment; ++i)
                     Pointer[i] = *default_value;
             }
             Length = size;
+
+            auto delta = alignment_delta(alignment);
+            if (delta != 0) {
+                Offset = alignment - delta;
+            }
         }
 
         Array(std::shared_ptr<Array<T>> parent, uintptr_t offset) {
@@ -85,7 +122,7 @@ namespace dragon {
         Array(std::shared_ptr<Array<T>> parent, uintptr_t offset, size_t length) {
             Pointer = parent->Pointer;
             Offset = offset + parent->Offset;
-            if (length > parent->Length - Offset)
+            if (length > parent->Length - Offset || length <= 0)
                 Length = parent->Length;
             else
                 Length = length + offset;
@@ -103,6 +140,18 @@ namespace dragon {
                 throw out_of_bounds_exception();
             }
             return data()[index];
+        }
+
+        [[nodiscard]] size_t alignment_delta(size_t alignment) const {
+            return reinterpret_cast<uintptr_t>(data()) % alignment;
+        }
+
+        [[nodiscard]] bool is_aligned(size_t alignment) const {
+            return alignment_delta(alignment) == 0;
+        }
+
+        Array<T> align_as(size_t alignment) const {
+            return Array<T>(data(), size(), true, alignment);
         }
 
         void set(uintptr_t index, T value) const {
