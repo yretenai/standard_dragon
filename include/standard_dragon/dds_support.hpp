@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <standard_dragon/dragon.hpp>
 
-namespace standard_dragon::support {
+namespace dragon::support {
 #pragma pack(push, 4)
     typedef struct DDS_PIXEL_FORMAT {
         uint32_t size = 0x20;
