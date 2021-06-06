@@ -12,9 +12,9 @@
 #include <type_traits>
 #include <vector>
 
-namespace dragon {
-    class out_of_bounds_exception : public std::exception {};
+#include <standard_dragon/exception/out_of_bounds.hpp>
 
+namespace dragon {
     template<typename T>
     class Array {
     public:
@@ -137,7 +137,7 @@ namespace dragon {
 
         T &get(uintptr_t index) const {
             if (index < 0 || index >= this->size()) {
-                throw out_of_bounds_exception();
+                throw dragon::exception::out_of_bounds();
             }
             return data()[index];
         }
@@ -156,7 +156,7 @@ namespace dragon {
 
         void set(uintptr_t index, T value) const {
             if (index < 0 || index >= this->size()) {
-                throw out_of_bounds_exception();
+                throw dragon::exception::out_of_bounds();
             }
             data()[index] = value;
         }
@@ -164,7 +164,7 @@ namespace dragon {
         template<typename U>
         U cast(uintptr_t index) {
             if (index < 0 || index >= this->size()) {
-                throw out_of_bounds_exception();
+                throw dragon::exception::out_of_bounds();
             }
             return reinterpret_cast<U *>(data() + index)[0];
         }
@@ -179,7 +179,7 @@ namespace dragon {
         template<typename U>
         Array<U> cast(uintptr_t index, size_t size) {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
-                throw out_of_bounds_exception();
+                throw dragon::exception::out_of_bounds();
             }
             return Array<U>(reinterpret_cast<U *>(data() + index), size, false);
         }
@@ -193,14 +193,14 @@ namespace dragon {
 
         Array<T> slice(uintptr_t index, size_t size) {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
-                throw out_of_bounds_exception();
+                throw dragon::exception::out_of_bounds();
             }
             return Array<T>((data() + index), size, false);
         }
 
         Array<T> shift(uintptr_t index) {
             if (index < 0 || index >= this->size()) {
-                throw out_of_bounds_exception();
+                throw dragon::exception::out_of_bounds();
             }
             return Array<T>(this, index);
         }
@@ -213,7 +213,7 @@ namespace dragon {
 
         void copy(uintptr_t ptr, uintptr_t index, size_t size) {
             if (size < 0 || size > this->size()) {
-                throw out_of_bounds_exception();
+                throw dragon::exception::out_of_bounds();
             }
             std::copy_n((data() + index), size, reinterpret_cast<T *>(ptr));
         }
@@ -226,7 +226,7 @@ namespace dragon {
 
         void paste(uintptr_t ptr, uintptr_t index, size_t size) {
             if (size < 0 || size > this->size()) {
-                throw out_of_bounds_exception();
+                throw dragon::exception::out_of_bounds();
             }
             std::copy_n(reinterpret_cast<T *>(ptr), size, (data() + index));
         }
