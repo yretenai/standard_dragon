@@ -13,11 +13,11 @@
 #include <string>
 
 #ifdef DRAGON_AKPKANSI
-#define DRAGON_AKPK_CHAR_TYPE char
-#define DRAGON_AKPK_STRING_TYPE std::string
+#    define DRAGON_AKPK_CHAR_TYPE char
+#    define DRAGON_AKPK_STRING_TYPE std::string
 #else
-#define DRAGON_AKPK_CHAR_TYPE wchar_t
-#define DRAGON_AKPK_STRING_TYPE std::wstring
+#    define DRAGON_AKPK_CHAR_TYPE wchar_t
+#    define DRAGON_AKPK_STRING_TYPE std::wstring
 #endif
 
 namespace dragon {

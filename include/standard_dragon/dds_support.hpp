@@ -179,4 +179,4 @@ namespace dragon::support {
         DDSHeaderDXT10 dx10 = {};
     } DDS;
 #pragma pack(pop)
-} // namespace standard_dragon::support
+} // namespace dragon::support

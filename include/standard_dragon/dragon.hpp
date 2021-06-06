@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "macros.hpp"
 #include "Array.hpp"
+#include "macros.hpp"
 #include <filesystem>
 #include <fstream>
 #include <iostream>
