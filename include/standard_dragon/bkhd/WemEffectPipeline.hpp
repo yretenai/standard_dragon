@@ -9,6 +9,6 @@
 namespace dragon::bkhd {
     class WemEffectPipeline : public WemChunk {
     public:
-        WemEffectPipeline(dragon::Array<uint8_t> buffer) {}
+        WemEffectPipeline(dragon::Array<uint8_t> buffer) { }
     };
 } // namespace dragon::bkhd

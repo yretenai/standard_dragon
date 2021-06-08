@@ -9,6 +9,6 @@
 namespace dragon::bkhd {
     class WemHierarchy : public WemChunk {
     public:
-        WemHierarchy(dragon::Array<uint8_t> buffer) {}
+        WemHierarchy(dragon::Array<uint8_t> buffer) { }
     };
 } // namespace dragon::bkhd

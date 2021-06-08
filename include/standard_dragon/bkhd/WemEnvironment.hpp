@@ -9,6 +9,6 @@
 namespace dragon::bkhd {
     class WemEnvironment : public WemChunk {
     public:
-        WemEnvironment(dragon::Array<uint8_t> buffer) {}
+        WemEnvironment(dragon::Array<uint8_t> buffer) { }
     };
 } // namespace dragon::bkhd

@@ -17,7 +17,7 @@ void process_file(const std::filesystem::path &path) {
     std::shared_ptr<dragon::bkhd::WemChunk> data_chunk = bank.get_chunk_impl(dragon::WemSoundbank::DATA_FOURCC);
     if (didx_chunk != nullptr && data_chunk != nullptr) {
         dragon::bkhd::WemDataIndex *didx = CAST_WEMBNK_CHUNK(dragon::bkhd::WemDataIndex, didx_chunk);
-        dragon::bkhd::WemData *data = CAST_WEMBNK_CHUNK(dragon::bkhd::WemData, didx_chunk);
+        dragon::bkhd::WemData *data      = CAST_WEMBNK_CHUNK(dragon::bkhd::WemData, didx_chunk);
         for (auto entry : didx->streams) {
             dragon::write_file(full / (std::to_string(entry.first) + ".wem"), data->get_stream(entry.second));
         }

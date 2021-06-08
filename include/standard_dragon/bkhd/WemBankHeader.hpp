@@ -14,7 +14,7 @@ namespace dragon::bkhd {
 
         WemBankHeader(dragon::Array<uint8_t> buffer) {
             version = buffer.cast<uint32_t>(0);
-            id = buffer.cast<uint32_t>(4);
+            id      = buffer.cast<uint32_t>(4);
         }
     };
 } // namespace dragon::bkhd

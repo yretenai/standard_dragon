@@ -26,7 +26,7 @@ namespace dragon {
 #pragma pack(push, 1)
         typedef struct BNK_CHUNK_HEADER {
             uint32_t fourcc = 0;
-            uint32_t size = 0;
+            uint32_t size   = 0;
         } BnkChunkHeader;
         DRAGON_ASSERT(sizeof(BnkChunkHeader) == 8, "Bnk Chunk Header has an invalid size");
 #pragma pack(pop)
@@ -40,10 +40,10 @@ namespace dragon {
         static constexpr uint32_t STID_FOURCC = DRAGON_MAGIC32('S', 'T', 'I', 'D');
 
         explicit WemSoundbank(const dragon::Array<uint8_t> &buffer) {
-            base_stream = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size(), true);
+            base_stream   = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size(), true);
             uintptr_t ptr = 0;
             while (ptr < base_stream->size()) {
-                auto header = base_stream->lpcast<BnkChunkHeader>(&ptr);
+                auto header           = base_stream->lpcast<BnkChunkHeader>(&ptr);
                 chunks[header.fourcc] = std::pair<uintptr_t, BnkChunkHeader>(ptr, header);
                 switch (header.fourcc) {
                     case BKHD_FOURCC:

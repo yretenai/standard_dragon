@@ -12,9 +12,9 @@ namespace dragon::bkhd {
     public:
 #pragma pack(push, 1)
         typedef struct BNK_DIDX_ENTRY {
-            uint32_t id = 0;
+            uint32_t id     = 0;
             uint32_t offset = 0;
-            uint32_t size = 0;
+            uint32_t size   = 0;
         } DataIndexEntry;
         DRAGON_ASSERT(sizeof(DataIndexEntry) == 12, "BNK DIDX Entry has an invalid size");
 #pragma pack(pop)

@@ -10,33 +10,33 @@
 namespace dragon::support {
 #pragma pack(push, 4)
     typedef struct DDS_PIXEL_FORMAT {
-        uint32_t size = 0x20;
-        uint32_t flags = 0x00000004;
-        uint32_t fourCC = 0x30315844; // DX10
+        uint32_t size        = 0x20;
+        uint32_t flags       = 0x00000004;
+        uint32_t fourCC      = 0x30315844; // DX10
         uint32_t RGBBitCount = 0;
-        uint32_t RBitMask = 0;
-        uint32_t GBitMask = 0;
-        uint32_t BBitMask = 0;
-        uint32_t ABitMask = 0;
+        uint32_t RBitMask    = 0;
+        uint32_t GBitMask    = 0;
+        uint32_t BBitMask    = 0;
+        uint32_t ABitMask    = 0;
     } DDSPixelFormat;
     DRAGON_ASSERT(sizeof(DDS_PIXEL_FORMAT) == 0x20, "sizeof(DDS_PIXEL_FORMAT) != 0x20");
 
     typedef struct DDS_HEADER {
-        uint32_t magic = 0x20534444;
-        uint32_t size = 0x7C;
-        uint32_t flags = 0x000A1007;
-        uint32_t height = 0;
-        uint32_t width = 0;
-        uint32_t linear_size = 0;
-        uint32_t depth = 1;
-        uint32_t mip_count = 0;
-        uint32_t reserved1[11] = {};
+        uint32_t magic              = 0x20534444;
+        uint32_t size               = 0x7C;
+        uint32_t flags              = 0x000A1007;
+        uint32_t height             = 0;
+        uint32_t width              = 0;
+        uint32_t linear_size        = 0;
+        uint32_t depth              = 1;
+        uint32_t mip_count          = 0;
+        uint32_t reserved1[11]      = {};
         DDSPixelFormat pixel_format = {};
-        uint32_t caps = 0x00401008;
-        uint32_t caps2 = 0;
-        uint32_t caps3 = 0;
-        uint32_t caps4 = 0;
-        uint32_t reserved2 = {};
+        uint32_t caps               = 0x00401008;
+        uint32_t caps2              = 0;
+        uint32_t caps3              = 0;
+        uint32_t caps4              = 0;
+        uint32_t reserved2          = {};
     } DDSHeader;
     DRAGON_ASSERT(sizeof(DDS_HEADER) == 0x80, "sizeof(DDS_HEADER) != 0x80");
 
@@ -166,16 +166,16 @@ namespace dragon::support {
     } DXGIFormat;
 
     typedef struct DDS_HEADER_DXT10 {
-        DXGIFormat format = DXGIFormat::UNKNOWN;
+        DXGIFormat format           = DXGIFormat::UNKNOWN;
         uint32_t resource_dimension = 0x3;
-        uint32_t flags = 0;
-        uint32_t array_size = 0x1;
-        uint32_t flags2 = 0x2;
+        uint32_t flags              = 0;
+        uint32_t array_size         = 0x1;
+        uint32_t flags2             = 0x2;
     } DDSHeaderDXT10;
     DRAGON_ASSERT(sizeof(DDS_HEADER_DXT10) == 0x14, "sizeof(DDS_HEADER_DXT10) != 0x14");
 
     typedef struct DDS_FORMAT {
-        DDSHeader dx9 = {};
+        DDSHeader dx9       = {};
         DDSHeaderDXT10 dx10 = {};
     } DDS;
 #pragma pack(pop)

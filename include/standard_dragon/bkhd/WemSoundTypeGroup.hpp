@@ -9,6 +9,6 @@
 namespace dragon::bkhd {
     class WemSoundTypeGroup : public WemChunk {
     public:
-        WemSoundTypeGroup(dragon::Array<uint8_t> buffer) {}
+        WemSoundTypeGroup(dragon::Array<uint8_t> buffer) { }
     };
 } // namespace dragon::bkhd

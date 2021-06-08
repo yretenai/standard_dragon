@@ -19,17 +19,17 @@ namespace dragon {
     class Array {
     public:
         std::shared_ptr<T[]> Pointer = nullptr;
-        size_t Length = 0;
-        uintptr_t Offset = 0;
+        size_t Length                = 0;
+        uintptr_t Offset             = 0;
 
         struct Iterator {
             using iterator_category = std::forward_iterator_tag;
-            using difference_type = std::ptrdiff_t;
-            using value_type = T;
-            using pointer = T *;
-            using reference = T &;
+            using difference_type   = std::ptrdiff_t;
+            using value_type        = T;
+            using pointer           = T *;
+            using reference         = T &;
 
-            explicit Iterator(pointer ptr) : m_ptr(ptr) {}
+            explicit Iterator(pointer ptr) : m_ptr(ptr) { }
 
             reference operator*() const { return *m_ptr; }
             pointer operator->() { return m_ptr; }
@@ -51,7 +51,7 @@ namespace dragon {
 
         Array() = default;
 
-        explicit Array(std::vector<T> vector) : Array(vector.data(), vector.size(), true) {}
+        explicit Array(std::vector<T> vector) : Array(vector.data(), vector.size(), true) { }
 
         Array(T *buffer, size_t size, bool copy, size_t alignment = __STDCPP_DEFAULT_NEW_ALIGNMENT__) {
             if (alignment < 1) {
@@ -69,7 +69,7 @@ namespace dragon {
             }
 
             if (copy) {
-                Pointer = std::shared_ptr<T[]>(new T[size + alignment - 1]);
+                Pointer    = std::shared_ptr<T[]>(new T[size + alignment - 1]);
                 auto delta = alignment_delta(alignment);
                 if (delta != 0) {
                     Offset = alignment - delta;
@@ -115,13 +115,13 @@ namespace dragon {
 
         Array(std::shared_ptr<Array<T>> parent, uintptr_t offset) {
             Pointer = parent->Pointer;
-            Offset = offset + parent->Offset;
-            Length = parent->Length;
+            Offset  = offset + parent->Offset;
+            Length  = parent->Length;
         }
 
         Array(std::shared_ptr<Array<T>> parent, uintptr_t offset, size_t length) {
             Pointer = parent->Pointer;
-            Offset = offset + parent->Offset;
+            Offset  = offset + parent->Offset;
             if (length > parent->Length - Offset || length <= 0)
                 Length = parent->Length;
             else

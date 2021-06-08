@@ -25,23 +25,23 @@ namespace dragon {
     public:
 #pragma pack(push, 1)
         typedef struct AUDIO_PACK_HEADER {
-            uint32_t fourcc = AKPK_FOURCC;
-            uint32_t size = 0;
-            uint32_t version = 1;
-            uint32_t name_table_size = 0;
-            uint32_t bank_table_size = 0;
-            uint32_t stream_table_size = 0;
+            uint32_t fourcc                     = AKPK_FOURCC;
+            uint32_t size                       = 0;
+            uint32_t version                    = 1;
+            uint32_t name_table_size            = 0;
+            uint32_t bank_table_size            = 0;
+            uint32_t stream_table_size          = 0;
             uint32_t external_stream_table_size = 0;
         } AudioPackHeader;
         DRAGON_ASSERT(sizeof(AudioPackHeader) == 28, "Wem Audio Pack header has an invalid size");
 
         template<typename T>
         struct AUDIO_PACK_ENTRY {
-            T id = 0;
+            T id               = 0;
             uint32_t alignment = 0;
-            uint32_t size = 0;
-            uint32_t offset = 0;
-            uint32_t folder = 0;
+            uint32_t size      = 0;
+            uint32_t offset    = 0;
+            uint32_t folder    = 0;
         };
 
         typedef AUDIO_PACK_ENTRY<uint32_t> AudioPackEntry;
@@ -68,7 +68,7 @@ namespace dragon {
             base_stream = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size(), true);
 
             size_t cursor = sizeof(AudioPackHeader);
-            auto count = buffer.cast<uint32_t>(cursor);
+            auto count    = buffer.cast<uint32_t>(cursor);
             for (const AudioPackName &name_entry : buffer.cast<AudioPackName>(cursor + 4, count)) {
                 names[name_entry.id] = DRAGON_AKPK_STRING_TYPE(reinterpret_cast<DRAGON_AKPK_CHAR_TYPE *>(buffer.data() + cursor + name_entry.offset));
             }
@@ -78,11 +78,11 @@ namespace dragon {
             banks = buffer.cast<AudioPackEntry>(cursor + 4, count);
 
             cursor += header.bank_table_size;
-            count = buffer.cast<uint32_t>(cursor);
+            count         = buffer.cast<uint32_t>(cursor);
             sound_streams = buffer.cast<AudioPackEntry>(cursor + 4, count);
 
             cursor += header.stream_table_size;
-            count = buffer.cast<uint32_t>(cursor);
+            count                  = buffer.cast<uint32_t>(cursor);
             external_sound_streams = buffer.cast<AudioPackEntry64>(cursor + 4, count);
         }
 
