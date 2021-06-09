@@ -21,6 +21,7 @@ namespace dragon {
         std::shared_ptr<T[]> Pointer = nullptr;
         size_t Length                = 0;
         uintptr_t Offset             = 0;
+        size_t Alignment             = __STDCPP_DEFAULT_NEW_ALIGNMENT__;
 
         struct Iterator {
             using iterator_category = std::forward_iterator_tag;
@@ -78,7 +79,8 @@ namespace dragon {
             } else {
                 Pointer = std::shared_ptr<T[]>(buffer);
             }
-            Length = size;
+            Alignment = alignment;
+            Length    = size;
         }
 
         Array(std::shared_ptr<T[]> pointer, size_t size) {
@@ -111,6 +113,8 @@ namespace dragon {
             if (delta != 0) {
                 Offset = alignment - delta;
             }
+
+            Alignment = alignment;
         }
 
         Array(std::shared_ptr<Array<T>> parent, uintptr_t offset) {
@@ -247,9 +251,29 @@ namespace dragon {
             return std::wstring(reinterpret_cast<wchar_t *>(data()), size());
         }
 
-        std::istringstream to_string_stream() { return std::istringstream(reinterpret_cast<char *>(data()), size()); }
+        template<typename U = T>
+        typename std::enable_if<sizeof(U) == 1 && std::is_same<U, T>::value, void>::type ensure_null_terminated() {
+            auto buffer = Pointer;
+            if (buffer[size() - 1] != 0x00) {
+                Length += 1;
+                Pointer    = std::shared_ptr<T[]>(new T[size() + Alignment - 1]);
+                auto delta = alignment_delta(Alignment);
+                if (delta != 0) {
+                    Offset = Alignment - delta;
+                }
+                std::copy_n(buffer.get(), size() - 1, data());
+                data()[size() - 1] = static_cast<T>(0x00);
+            }
+        }
 
-        std::iostream to_stream() { return std::iostream(reinterpret_cast<char *>(data()), byte_size()); }
+        template<typename U = T>
+        typename std::enable_if<sizeof(U) == 1 && std::is_same<U, T>::value, std::stringstream>::type to_string_stream() {
+            ensure_null_terminated<U>();
+            return std::stringstream(reinterpret_cast<char *>(data()), std::ios::in | std::ios::out);
+        }
+
+        template<typename U = T>
+        typename std::enable_if<sizeof(T) == 1 && std::is_same<U, T>::value, std::iostream>::type to_stream() { return std::iostream(reinterpret_cast<char *>(data()), std::ios::in | std::ios::out, byte_size()); }
 
         std::vector<T> to_vector() { return std::vector<T>(data(), data() + size()); }
 
