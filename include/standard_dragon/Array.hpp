@@ -241,20 +241,10 @@ namespace dragon {
             (*index) += size;
         }
 
-        std::string to_string() { return std::string(reinterpret_cast<char *>(data()), size()); }
-
-        std::wstring to_wstring() {
-            if (sizeof(T) == sizeof(char)) {
-                return std::wstring(this->to_string());
-            }
-
-            return std::wstring(reinterpret_cast<wchar_t *>(data()), size());
-        }
-
         template<typename U = T>
-        typename std::enable_if<sizeof(U) == 1 && std::is_same<U, T>::value, void>::type ensure_null_terminated() {
+        typename std::enable_if<sizeof(U) <= 2 && std::is_same<U, T>::value && std::is_integral<U>::value, void>::type ensure_null_terminated() {
             auto buffer = Pointer;
-            if (buffer[size() - 1] != 0x00) {
+            if (buffer[size() - 1] != 0) {
                 Length += 1;
                 Pointer    = std::shared_ptr<T[]>(new T[size() + Alignment - 1]);
                 auto delta = alignment_delta(Alignment);
@@ -262,18 +252,40 @@ namespace dragon {
                     Offset = Alignment - delta;
                 }
                 std::copy_n(buffer.get(), size() - 1, data());
-                data()[size() - 1] = static_cast<T>(0x00);
+                data()[size() - 1] = static_cast<T>(0);
             }
         }
 
         template<typename U = T>
-        typename std::enable_if<sizeof(U) == 1 && std::is_same<U, T>::value, std::stringstream>::type to_string_stream() {
+        typename std::enable_if<sizeof(U) == 1 && std::is_same<U, T>::value && std::is_integral<U>::value, std::string>::type to_string() {
+            ensure_null_terminated<U>();
+            return std::string(reinterpret_cast<char *>(data()), size());
+        }
+
+        template<typename U = T>
+        typename std::enable_if<sizeof(U) <= 2 && std::is_same<U, T>::value && std::is_integral<U>::value, std::string>::type to_wstring() {
+            ensure_null_terminated<U>();
+            if (sizeof(U) == 1) {
+                return std::wstring(to_string());
+            }
+
+            return std::wstring(reinterpret_cast<wchar_t *>(data()), size());
+        }
+
+        template<typename U = T>
+        typename std::enable_if<sizeof(U) == 1 && std::is_same<U, T>::value && std::is_integral<U>::value, std::stringstream>::type to_string_stream() {
             ensure_null_terminated<U>();
             return std::stringstream(reinterpret_cast<char *>(data()), std::ios::in | std::ios::out);
         }
 
         template<typename U = T>
-        typename std::enable_if<sizeof(T) == 1 && std::is_same<U, T>::value, std::iostream>::type to_stream() { return std::iostream(reinterpret_cast<char *>(data()), std::ios::in | std::ios::out, byte_size()); }
+        typename std::enable_if<sizeof(U) == 2 && std::is_same<U, T>::value && std::is_integral<U>::value, std::wstringstream>::type to_wstring_stream() {
+            ensure_null_terminated<U>();
+            return std::wstringstream(reinterpret_cast<wchar_t *>(data()), std::ios::in | std::ios::out);
+        }
+
+        template<typename U = T>
+        typename std::enable_if<sizeof(T) == 1 && std::is_same<U, T>::value && std::is_integral<U>::value, std::iostream>::type to_stream() { return std::iostream(reinterpret_cast<char *>(data()), std::ios::in | std::ios::out, byte_size()); }
 
         std::vector<T> to_vector() { return std::vector<T>(data(), data() + size()); }
 
