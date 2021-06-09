@@ -52,9 +52,9 @@ namespace dragon {
 
         Array() = default;
 
-        explicit Array(std::vector<T> vector) : Array(vector.data(), vector.size(), true) { }
+        explicit Array(std::vector<T> vector) : Array(vector.data(), vector.size()) { }
 
-        Array(T *buffer, size_t size, bool copy, size_t alignment = __STDCPP_DEFAULT_NEW_ALIGNMENT__) {
+        Array(T *buffer, size_t size, size_t alignment = __STDCPP_DEFAULT_NEW_ALIGNMENT__) {
             if (alignment < 1) {
                 alignment = 1;
             }
@@ -63,22 +63,12 @@ namespace dragon {
                 size = 1;
             }
 
-            if (!copy) {
-                if ((reinterpret_cast<uintptr_t>(buffer) % alignment) != 0) {
-                    copy = true;
-                }
+            Pointer    = std::shared_ptr<T[]>(new T[size + alignment - 1]);
+            auto delta = alignment_delta(alignment);
+            if (delta != 0) {
+                Offset = alignment - delta;
             }
-
-            if (copy) {
-                Pointer    = std::shared_ptr<T[]>(new T[size + alignment - 1]);
-                auto delta = alignment_delta(alignment);
-                if (delta != 0) {
-                    Offset = alignment - delta;
-                }
-                std::copy_n(buffer, size, data());
-            } else {
-                Pointer = std::shared_ptr<T[]>(buffer);
-            }
+            std::copy_n(buffer, size, data());
             Alignment = alignment;
             Length    = size;
         }
@@ -134,7 +124,7 @@ namespace dragon {
 
         template<typename U>
         static Array<T> ptr_cast(U *buffer, size_t size) {
-            return Array<T>(reinterpret_cast<T *>(buffer), size * sizeof(U) / sizeof(T), false);
+            return Array<T>(reinterpret_cast<T *>(buffer), size * sizeof(U) / sizeof(T));
         }
 
         T &operator[](uintptr_t index) const { return get(index); }
@@ -185,7 +175,7 @@ namespace dragon {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
                 throw dragon::exception::out_of_bounds();
             }
-            return Array<U>(reinterpret_cast<U *>(data() + index), size, false);
+            return Array<U>(reinterpret_cast<U *>(data() + index), size);
         }
 
         template<typename U>
@@ -199,7 +189,7 @@ namespace dragon {
             if (index < 0 || index >= this->size() || size < 0 || index + size > this->size()) {
                 throw dragon::exception::out_of_bounds();
             }
-            return Array<T>((data() + index), size, false);
+            return Array<T>((data() + index), size);
         }
 
         Array<T> shift(uintptr_t index) {
