@@ -4,12 +4,16 @@
 
 #pragma once
 
-#include "Array.hpp"
-#include "macros.hpp"
+#include <deque>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <iterator>
+#include <set>
 #include <type_traits>
+
+#include "Array.hpp"
+#include "macros.hpp"
 
 #ifdef _WIN32
 #    ifndef WIN32_LEAN_AND_MEAN
@@ -54,5 +58,52 @@ namespace dragon {
         file.write(reinterpret_cast<const char *>(buffer.data()), (std::streamsize) buffer.size());
         file.flush();
         file.close();
+    }
+
+    inline void str_to_lower(std::string &str) {
+        std::transform(str.begin(), str.end(), str.begin(), [](char c) { return std::tolower(c); });
+    }
+
+    inline void str_to_upper(std::string &str) {
+        std::transform(str.begin(), str.end(), str.begin(), [](char c) { return std::toupper(c); });
+    }
+
+    inline std::deque<std::filesystem::path> find_paths(std::deque<std::string> &paths, const std::set<std::string> &filters = {}, std::filesystem::directory_options options = {}) {
+        std::deque<std::filesystem::path> container;
+
+        for (const auto &path : paths) {
+            if (!std::filesystem::exists(path)) {
+                continue;
+            }
+
+            if (std::filesystem::is_directory(path)) {
+                for (const auto &entry : std::filesystem::recursive_directory_iterator(path, options)) {
+                    if (entry.is_directory()) {
+                        continue;
+                    }
+
+                    const auto &sub_path = entry.path();
+                    auto ext             = sub_path.extension();
+                    if (!filters.empty()) {
+                        bool found = false;
+                        for (const auto &filter : filters) {
+                            if (ext == filter) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (!found) {
+                            continue;
+                        }
+                    }
+                    container.emplace_back(sub_path);
+                }
+            } else {
+                container.emplace_back(path);
+            }
+        }
+
+        return container;
     }
 } // namespace dragon
