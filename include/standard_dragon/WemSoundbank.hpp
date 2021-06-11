@@ -18,8 +18,6 @@
 #include <map>
 #include <memory>
 
-#define CAST_WEMBNK_CHUNK(target, chunk) (std::reinterpret_pointer_cast<target>(chunk).get())
-
 namespace dragon {
     class WemSoundbank {
     public:
@@ -30,45 +28,38 @@ namespace dragon {
         } BnkChunkHeader;
         DRAGON_ASSERT(sizeof(BnkChunkHeader) == 8, "Bnk Chunk Header has an invalid size");
 #pragma pack(pop)
-        static constexpr uint32_t BKHD_FOURCC = DRAGON_MAGIC32('B', 'K', 'H', 'D');
-        static constexpr uint32_t DATA_FOURCC = DRAGON_MAGIC32('D', 'A', 'T', 'A');
-        static constexpr uint32_t DIDX_FOURCC = DRAGON_MAGIC32('D', 'I', 'D', 'X');
-        static constexpr uint32_t FXPR_FOURCC = DRAGON_MAGIC32('F', 'X', 'P', 'R');
-        static constexpr uint32_t ENVS_FOURCC = DRAGON_MAGIC32('E', 'N', 'V', 'S');
-        static constexpr uint32_t HIRC_FOURCC = DRAGON_MAGIC32('H', 'I', 'R', 'C');
-        static constexpr uint32_t STMG_FOURCC = DRAGON_MAGIC32('S', 'T', 'M', 'G');
-        static constexpr uint32_t STID_FOURCC = DRAGON_MAGIC32('S', 'T', 'I', 'D');
 
         explicit WemSoundbank(const dragon::Array<uint8_t> &buffer) {
-            base_stream   = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size(), true);
+            base_stream   = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size());
             uintptr_t ptr = 0;
             while (ptr < base_stream->size()) {
                 auto header           = base_stream->lpcast<BnkChunkHeader>(&ptr);
                 chunks[header.fourcc] = std::pair<uintptr_t, BnkChunkHeader>(ptr, header);
+                auto chunk            = get_chunk(header.fourcc);
                 switch (header.fourcc) {
-                    case BKHD_FOURCC:
-                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemBankHeader>(get_chunk(header.fourcc));
+                    case dragon::bkhd::WemBankHeader::fourcc:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemBankHeader>(chunk);
                         break;
-                    case DATA_FOURCC:
-                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemData>(get_chunk(header.fourcc));
+                    case dragon::bkhd::WemData::fourcc:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemData>(chunk);
                         break;
-                    case DIDX_FOURCC:
-                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemDataIndex>(get_chunk(header.fourcc));
+                    case dragon::bkhd::WemDataIndex::fourcc:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemDataIndex>(chunk);
                         break;
-                    case FXPR_FOURCC:
-                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemEffectPipeline>(get_chunk(header.fourcc));
+                    case dragon::bkhd::WemEffectPipeline::fourcc:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemEffectPipeline>(chunk);
                         break;
-                    case ENVS_FOURCC:
-                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemEnvironment>(get_chunk(header.fourcc));
+                    case dragon::bkhd::WemEnvironment::fourcc:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemEnvironment>(chunk);
                         break;
-                    case HIRC_FOURCC:
-                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemHierarchy>(get_chunk(header.fourcc));
+                    case dragon::bkhd::WemHierarchy::fourcc:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemHierarchy>(chunk);
                         break;
-                    case STMG_FOURCC:
-                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemSoundTypeGroup>(get_chunk(header.fourcc));
+                    case dragon::bkhd::WemSoundTypeGroup::fourcc:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemSoundTypeGroup>(chunk);
                         break;
-                    case STID_FOURCC:
-                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemSoundTypeId>(get_chunk(header.fourcc));
+                    case dragon::bkhd::WemSoundTypeId::fourcc:
+                        parsed_chunks[header.fourcc] = std::make_shared<dragon::bkhd::WemSoundTypeId>(chunk);
                         break;
                     default:
                         DRAGON_ELOG("Unprocessed chunk " << header.fourcc);
@@ -89,15 +80,17 @@ namespace dragon {
             return dragon::Array<uint8_t>(base_stream, pair.first, pair.second.size);
         }
 
-        std::shared_ptr<dragon::bkhd::WemChunk> get_chunk_impl(uint32_t fourcc) {
-            if (!has_chunk_impl(fourcc)) {
+        template<typename T>
+        typename std::enable_if<std::is_base_of<dragon::bkhd::WemChunk, T>::value, std::shared_ptr<T>>::value get_chunk_impl() {
+            if (!has_chunk_impl<T>()) {
                 return nullptr;
             }
-            return parsed_chunks[fourcc];
+            return std::reinterpret_pointer_cast<T>(parsed_chunks[T::fourcc]);
         }
 
         bool has_chunk(uint32_t fourcc) { return chunks.find(fourcc) != chunks.end(); }
 
-        bool has_chunk_impl(uint32_t fourcc) { return parsed_chunks.find(fourcc) != parsed_chunks.end(); }
+        template<typename T>
+        typename std::enable_if<std::is_base_of<dragon::bkhd::WemChunk, T>::value, bool>::value has_chunk_impl() { return parsed_chunks.find(T::fourcc) != parsed_chunks.end(); }
     };
 } // namespace dragon

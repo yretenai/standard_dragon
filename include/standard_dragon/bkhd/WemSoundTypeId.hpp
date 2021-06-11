@@ -9,6 +9,8 @@
 namespace dragon::bkhd {
     class WemSoundTypeId : public WemChunk {
     public:
-        WemSoundTypeId(dragon::Array<uint8_t> buffer) { }
+        const static uint32_t fourcc = DRAGON_MAGIC32('S', 'T', 'I', 'D');
+
+        explicit WemSoundTypeId(dragon::Array<uint8_t> &buffer) { }
     };
 } // namespace dragon::bkhd

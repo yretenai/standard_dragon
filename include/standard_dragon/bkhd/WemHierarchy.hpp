@@ -9,6 +9,8 @@
 namespace dragon::bkhd {
     class WemHierarchy : public WemChunk {
     public:
-        WemHierarchy(dragon::Array<uint8_t> buffer) { }
+        const static uint32_t fourcc = DRAGON_MAGIC32('H', 'I', 'R', 'C');
+
+        explicit WemHierarchy(dragon::Array<uint8_t> &buffer) { }
     };
 } // namespace dragon::bkhd

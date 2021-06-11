@@ -10,6 +10,7 @@
 namespace dragon::bkhd {
     class WemChunk {
     public:
+        const static uint32_t fourcc;
         virtual ~WemChunk() noexcept = default;
     };
 } // namespace dragon::bkhd

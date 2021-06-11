@@ -145,7 +145,7 @@ namespace dragon {
         }
 
         Array<T> align_as(size_t alignment) const {
-            return Array<T>(data(), size(), true, alignment);
+            return Array<T>(data(), size(), alignment);
         }
 
         void set(uintptr_t index, T value) const {

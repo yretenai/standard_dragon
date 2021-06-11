@@ -10,10 +10,12 @@
 namespace dragon::bkhd {
     class WemData : public WemChunk {
     public:
+        const static uint32_t fourcc = DRAGON_MAGIC32('D', 'A', 'T', 'A');
+
         std::shared_ptr<dragon::Array<uint8_t>> data;
 
-        explicit WemData(const dragon::Array<uint8_t> &buffer) {
-            data = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size(), true);
+        explicit WemData(dragon::Array<uint8_t> &buffer) {
+            data = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size());
         }
 
         [[nodiscard]] dragon::Array<uint8_t> get_stream(WemDataIndex::DataIndexEntry entry) const {

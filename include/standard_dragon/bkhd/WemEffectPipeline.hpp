@@ -9,6 +9,8 @@
 namespace dragon::bkhd {
     class WemEffectPipeline : public WemChunk {
     public:
-        WemEffectPipeline(dragon::Array<uint8_t> buffer) { }
+        const static uint32_t fourcc = DRAGON_MAGIC32('F', 'X', 'P', 'R');
+
+        explicit WemEffectPipeline(dragon::Array<uint8_t> &buffer) { }
     };
 } // namespace dragon::bkhd

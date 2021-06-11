@@ -10,6 +10,8 @@
 namespace dragon::bkhd {
     class WemDataIndex : public WemChunk {
     public:
+        const static uint32_t fourcc = DRAGON_MAGIC32('D', 'I', 'D', 'X');
+
 #pragma pack(push, 1)
         typedef struct BNK_DIDX_ENTRY {
             uint32_t id     = 0;
@@ -20,7 +22,7 @@ namespace dragon::bkhd {
 #pragma pack(pop)
         std::map<uint32_t, DataIndexEntry> streams;
 
-        WemDataIndex(dragon::Array<uint8_t> buffer) {
+        explicit WemDataIndex(dragon::Array<uint8_t> &buffer) {
             dragon::Array<DataIndexEntry> didx = buffer.cast<DataIndexEntry>(0, buffer.size() / sizeof(DataIndexEntry));
             for (DataIndexEntry entry : didx) {
                 streams[entry.id] = entry;

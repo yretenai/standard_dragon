@@ -9,6 +9,8 @@
 namespace dragon::bkhd {
     class WemEnvironment : public WemChunk {
     public:
-        WemEnvironment(dragon::Array<uint8_t> buffer) { }
+        const static uint32_t fourcc = DRAGON_MAGIC32('E', 'N', 'V', 'S');
+
+        explicit WemEnvironment(dragon::Array<uint8_t> &buffer) { }
     };
 } // namespace dragon::bkhd

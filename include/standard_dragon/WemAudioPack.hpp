@@ -65,7 +65,7 @@ namespace dragon {
                 return;
             }
 
-            base_stream = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size(), true);
+            base_stream = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size());
 
             size_t cursor = sizeof(AudioPackHeader);
             auto count    = buffer.cast<uint32_t>(cursor);
