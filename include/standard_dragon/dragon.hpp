@@ -68,40 +68,44 @@ namespace dragon {
         std::transform(str.begin(), str.end(), str.begin(), [](char c) { return std::toupper(c); });
     }
 
+    inline void find_paths(const std::filesystem::path &path, std::deque<std::filesystem::path> &container, const std::set<std::string> &filters = {}, std::filesystem::directory_options options = {}) {
+        if (!std::filesystem::exists(path)) {
+            return;
+        }
+
+        if (std::filesystem::is_directory(path)) {
+            for (const auto &entry : std::filesystem::recursive_directory_iterator(path, options)) {
+                if (entry.is_directory()) {
+                    continue;
+                }
+
+                const auto &sub_path = entry.path();
+                auto ext             = sub_path.extension();
+                if (!filters.empty()) {
+                    bool found = false;
+                    for (const auto &filter : filters) {
+                        if (ext == filter) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        continue;
+                    }
+                }
+                container.emplace_back(sub_path);
+            }
+        } else {
+            container.emplace_back(path);
+        }
+    }
+
     inline std::deque<std::filesystem::path> find_paths(std::deque<std::string> &paths, const std::set<std::string> &filters = {}, std::filesystem::directory_options options = {}) {
         std::deque<std::filesystem::path> container;
 
         for (const auto &path : paths) {
-            if (!std::filesystem::exists(path)) {
-                continue;
-            }
-
-            if (std::filesystem::is_directory(path)) {
-                for (const auto &entry : std::filesystem::recursive_directory_iterator(path, options)) {
-                    if (entry.is_directory()) {
-                        continue;
-                    }
-
-                    const auto &sub_path = entry.path();
-                    auto ext             = sub_path.extension();
-                    if (!filters.empty()) {
-                        bool found = false;
-                        for (const auto &filter : filters) {
-                            if (ext == filter) {
-                                found = true;
-                                break;
-                            }
-                        }
-
-                        if (!found) {
-                            continue;
-                        }
-                    }
-                    container.emplace_back(sub_path);
-                }
-            } else {
-                container.emplace_back(path);
-            }
+            find_paths(path, container, filters, options);
         }
 
         return container;
