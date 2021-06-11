@@ -4,11 +4,11 @@
 
 #pragma once
 
-#define DRAGON_VERSION_I 6
+#define DRAGON_VERSION_I 22
 #define DRAGON_VERSION_MAJOR 1
-#define DRAGON_VERSION_MINOR 3
-#define DRAGON_VERSION_PATCH 0
-#define DRAGON_VERSION "1.2.0"
+#define DRAGON_VERSION_MINOR 5
+#define DRAGON_VERSION_PATCH 2
+#define DRAGON_VERSION "1.5.2"
 
 #define DRAGON_MAGIC32(ch0, ch1, ch2, ch3) \
     ((uint32_t) (uint8_t) (ch0) | ((uint32_t) (uint8_t) (ch1) << 8) | ((uint32_t) (uint8_t) (ch2) << 16) | ((uint32_t) (uint8_t) (ch3) << 24))
