@@ -164,9 +164,9 @@ namespace dragon {
         }
 
         template<typename U>
-        U lpcast(uintptr_t *index) {
-            U tmp = cast<U>(*index);
-            *index += sizeof(U) / sizeof(T);
+        U lpcast(uintptr_t &index) {
+            U tmp = cast<U>(index);
+            index += sizeof(U) / sizeof(T);
             return tmp;
         }
 
@@ -179,9 +179,9 @@ namespace dragon {
         }
 
         template<typename U>
-        Array<U> lpcast(uintptr_t *index, size_t size) {
-            Array<U> tmp = cast<U>(*index, size);
-            (*index) += size * sizeof(U) / sizeof(T);
+        Array<U> lpcast(uintptr_t &index, size_t size) {
+            Array<U> tmp = cast<U>(index, size);
+            index += size * sizeof(U) / sizeof(T);
             return tmp;
         }
 
@@ -199,9 +199,9 @@ namespace dragon {
             return Array<T>(this, index);
         }
 
-        Array<T> lpslice(uintptr_t *index, size_t size) {
-            Array<T> tmp = slice(*index, size);
-            (*index) += size;
+        Array<T> lpslice(uintptr_t &index, size_t size) {
+            Array<T> tmp = slice(index, size);
+            index += size;
             return tmp;
         }
 
@@ -212,10 +212,10 @@ namespace dragon {
             std::copy_n((data() + index), size, reinterpret_cast<T *>(ptr));
         }
 
-        void lpcopy(uintptr_t *ptr, uintptr_t *index, size_t size) {
-            copy(*ptr, *index, size);
-            (*ptr) += size * sizeof(T);
-            (*index) += size;
+        void lpcopy(uintptr_t &ptr, uintptr_t &index, size_t size) {
+            copy(ptr, index, size);
+            ptr += size * sizeof(T);
+            index += size;
         }
 
         void paste(uintptr_t ptr, uintptr_t index, size_t size) {
@@ -225,10 +225,10 @@ namespace dragon {
             std::copy_n(reinterpret_cast<T *>(ptr), size, (data() + index));
         }
 
-        void lppaste(uintptr_t *ptr, uintptr_t *index, size_t size) {
-            paste(*ptr, *index, size);
-            (*ptr) += size * sizeof(T);
-            (*index) += size;
+        void lppaste(uintptr_t &ptr, uintptr_t &index, size_t size) {
+            paste(ptr, index, size);
+            ptr += size * sizeof(T);
+            index += size;
         }
 
         template<typename U = T>

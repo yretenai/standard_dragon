@@ -24,7 +24,7 @@ namespace dragon {
     class WemAudioPack {
     public:
 #pragma pack(push, 1)
-        typedef struct AUDIO_PACK_HEADER {
+        using AudioPackHeader = struct AUDIO_PACK_HEADER {
             uint32_t fourcc                     = AKPK_FOURCC;
             uint32_t size                       = 0;
             uint32_t version                    = 1;
@@ -32,8 +32,8 @@ namespace dragon {
             uint32_t bank_table_size            = 0;
             uint32_t stream_table_size          = 0;
             uint32_t external_stream_table_size = 0;
-        } AudioPackHeader;
-        DRAGON_ASSERT(sizeof(AudioPackHeader) == 28, "Wem Audio Pack header has an invalid size");
+        };
+        DRAGON_ASSERT(sizeof(AudioPackHeader) == 28, "AudioPackHeader size is not 28");
 
         template<typename T>
         struct AUDIO_PACK_ENTRY {
@@ -44,16 +44,16 @@ namespace dragon {
             uint32_t folder    = 0;
         };
 
-        typedef AUDIO_PACK_ENTRY<uint32_t> AudioPackEntry;
-        DRAGON_ASSERT(sizeof(AudioPackEntry) == 20, "Wem Audio Pack Entry (32-bit) has an invalid size");
-        typedef AUDIO_PACK_ENTRY<uint64_t> AudioPackEntry64;
-        DRAGON_ASSERT(sizeof(AudioPackEntry64) == 24, "Wem Audio Pack Entry (64-bit) has an invalid size");
+        using AudioPackEntry = AUDIO_PACK_ENTRY<uint32_t>;
+        DRAGON_ASSERT(sizeof(AudioPackEntry) == 20, "AudioPackEntry size is not 20");
+        using AudioPackEntry64 = AUDIO_PACK_ENTRY<uint64_t>;
+        DRAGON_ASSERT(sizeof(AudioPackEntry64) == 24, "AudioPackEntry64 size is not 24");
 
-        typedef struct AUDIO_PACK_NAME {
+        using AudioPackName = struct AUDIO_PACK_NAME {
             uint32_t offset;
             uint32_t id;
-        } AudioPackName;
-        DRAGON_ASSERT(sizeof(AudioPackName) == 8, "Wem Audio Pack Name Entry has an invalid size");
+        };
+        DRAGON_ASSERT(sizeof(AudioPackName) == 8, "AudioPackName size is not 8");
 #pragma pack(pop)
 
         static constexpr uint32_t AKPK_FOURCC = DRAGON_MAGIC32('A', 'K', 'P', 'K');

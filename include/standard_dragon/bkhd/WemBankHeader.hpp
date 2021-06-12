@@ -12,10 +12,14 @@ namespace dragon::bkhd {
         const static uint32_t fourcc = DRAGON_MAGIC32('B', 'K', 'H', 'D');
         uint32_t version;
         uint32_t id;
+        uint32_t language_id;
 
         explicit WemBankHeader(dragon::Array<uint8_t> &buffer) {
-            version = buffer.cast<uint32_t>(0);
-            id      = buffer.cast<uint32_t>(4);
+            uintptr_t offset = 0;
+
+            version     = buffer.lpcast<uint32_t>(offset);
+            id          = buffer.lpcast<uint32_t>(offset);
+            language_id = buffer.lpcast<uint32_t>(offset);
         }
     };
 } // namespace dragon::bkhd

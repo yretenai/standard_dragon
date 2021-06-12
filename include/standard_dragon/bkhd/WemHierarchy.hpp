@@ -6,6 +6,8 @@
 
 #include "WemChunk.hpp"
 
+#include "hirc/WemHierarchyType.hpp"
+
 namespace dragon::bkhd {
     class WemHierarchy : public WemChunk {
     public:

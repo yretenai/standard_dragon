@@ -13,12 +13,12 @@ namespace dragon::bkhd {
         const static uint32_t fourcc = DRAGON_MAGIC32('D', 'I', 'D', 'X');
 
 #pragma pack(push, 1)
-        typedef struct BNK_DIDX_ENTRY {
+        using DataIndexEntry = struct BNK_DIDX_ENTRY {
             uint32_t id     = 0;
             uint32_t offset = 0;
             uint32_t size   = 0;
-        } DataIndexEntry;
-        DRAGON_ASSERT(sizeof(DataIndexEntry) == 12, "BNK DIDX Entry has an invalid size");
+        };
+        DRAGON_ASSERT(sizeof(DataIndexEntry) == 12, "DataIndexEntry size is not 12");
 #pragma pack(pop)
         std::map<uint32_t, DataIndexEntry> streams;
 

@@ -22,18 +22,18 @@ namespace dragon {
     class WemSoundbank {
     public:
 #pragma pack(push, 1)
-        typedef struct BNK_CHUNK_HEADER {
+        using BnkChunkHeader = struct BNK_CHUNK_HEADER {
             uint32_t fourcc = 0;
             uint32_t size   = 0;
-        } BnkChunkHeader;
-        DRAGON_ASSERT(sizeof(BnkChunkHeader) == 8, "Bnk Chunk Header has an invalid size");
+        };
+        DRAGON_ASSERT(sizeof(BnkChunkHeader) == 8, "BnkChunkHeader size is not 8");
 #pragma pack(pop)
 
         explicit WemSoundbank(const dragon::Array<uint8_t> &buffer) {
             base_stream   = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size());
             uintptr_t ptr = 0;
             while (ptr < base_stream->size()) {
-                auto header           = base_stream->lpcast<BnkChunkHeader>(&ptr);
+                auto header           = base_stream->lpcast<BnkChunkHeader>(ptr);
                 chunks[header.fourcc] = std::pair<uintptr_t, BnkChunkHeader>(ptr, header);
                 auto chunk            = get_chunk(header.fourcc);
                 switch (header.fourcc) {

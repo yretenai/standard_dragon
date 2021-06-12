@@ -7,7 +7,7 @@
 #include <cstdint>
 
 namespace dragon {
-    typedef struct uint128 {
+    using uint128_t = struct uint128 {
         uint64_t lo;
         uint64_t hi;
 
@@ -50,5 +50,5 @@ namespace dragon {
         inline bool operator==(const uint128 &rhs) const {
             return lo == rhs.lo && hi == rhs.hi;
         }
-    } uint128_t;
+    };
 } // namespace dragon
