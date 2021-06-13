@@ -87,7 +87,7 @@ namespace dragon::bkhd {
                 return nullptr;
             }
 
-            if (types[id] != T::TYPE) {
+            if (types[id] != T::type) {
                 return nullptr;
             }
             return std::reinterpret_pointer_cast<T>(chunks[id]);
