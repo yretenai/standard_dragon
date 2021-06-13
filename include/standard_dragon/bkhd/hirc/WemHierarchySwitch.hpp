@@ -10,7 +10,7 @@
 namespace dragon::bkhd::hirc {
     class WemHierarchySwitch : public WemHierarchyChunk {
     public:
-        const static WemHierarchyType type = WemHierarchyType::SwitchContainer;
+        static constexpr WemHierarchyType type = WemHierarchyType::SwitchContainer;
 
         explicit WemHierarchySwitch(dragon::Array<uint8_t> &buffer, uintptr_t &offset, uint32_t &version) {
             params     = NodeBaseParams(buffer, offset, version);

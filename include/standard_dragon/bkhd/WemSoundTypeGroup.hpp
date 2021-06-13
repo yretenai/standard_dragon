@@ -9,7 +9,7 @@
 namespace dragon::bkhd {
     class WemSoundTypeGroup : public WemChunk {
     public:
-        const static uint32_t fourcc = DRAGON_MAGIC32('S', 'T', 'M', 'G');
+        static constexpr uint32_t fourcc = DRAGON_MAGIC32('S', 'T', 'M', 'G');
 
         explicit WemSoundTypeGroup(dragon::Array<uint8_t> &buffer) { }
     };

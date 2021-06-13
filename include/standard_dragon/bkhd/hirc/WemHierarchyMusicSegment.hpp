@@ -10,7 +10,7 @@
 namespace dragon::bkhd::hirc {
     class WemHierarchyMusicSegment : public WemHierarchyChunk {
     public:
-        const static WemHierarchyType type = WemHierarchyType::MusicSegment;
+        static constexpr WemHierarchyType type = WemHierarchyType::MusicSegment;
 
         explicit WemHierarchyMusicSegment(dragon::Array<uint8_t> &buffer, uintptr_t &offset, uint32_t &version) {
             flags      = buffer.lpcast<uint8_t>(offset);

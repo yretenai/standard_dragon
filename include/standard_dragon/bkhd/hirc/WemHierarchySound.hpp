@@ -10,7 +10,7 @@
 namespace dragon::bkhd::hirc {
     class WemHierarchySound : public WemHierarchyChunk {
     public:
-        const static WemHierarchyType type = WemHierarchyType::Sound;
+        static constexpr WemHierarchyType type = WemHierarchyType::Sound;
 
         explicit WemHierarchySound(dragon::Array<uint8_t> &buffer, uintptr_t &offset, uint32_t &version) {
             source = SourceInfo(buffer, offset);

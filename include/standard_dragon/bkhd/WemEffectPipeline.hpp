@@ -9,7 +9,7 @@
 namespace dragon::bkhd {
     class WemEffectPipeline : public WemChunk {
     public:
-        const static uint32_t fourcc = DRAGON_MAGIC32('F', 'X', 'P', 'R');
+        static constexpr uint32_t fourcc = DRAGON_MAGIC32('F', 'X', 'P', 'R');
 
         explicit WemEffectPipeline(dragon::Array<uint8_t> &buffer) { }
     };

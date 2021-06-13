@@ -9,7 +9,7 @@
 namespace dragon::bkhd {
     class WemBankHeader : public WemChunk {
     public:
-        const static uint32_t fourcc = DRAGON_MAGIC32('B', 'K', 'H', 'D');
+        static constexpr uint32_t fourcc = DRAGON_MAGIC32('B', 'K', 'H', 'D');
         uint32_t version;
         uint32_t id;
         uint32_t language_id;

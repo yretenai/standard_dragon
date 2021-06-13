@@ -17,7 +17,7 @@ namespace dragon::bkhd::hirc {
         };
 #pragma pack(pop)
 
-        const static WemHierarchyType type = WemHierarchyType::Container;
+        static constexpr WemHierarchyType type = WemHierarchyType::Container;
 
         explicit WemHierarchyContainer(dragon::Array<uint8_t> &buffer, uintptr_t &offset, uint32_t &version) {
             params             = NodeBaseParams(buffer, offset, version);

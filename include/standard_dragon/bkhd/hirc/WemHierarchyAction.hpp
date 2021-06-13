@@ -10,7 +10,7 @@
 namespace dragon::bkhd::hirc {
     class WemHierarchyAction : public WemHierarchyChunk {
     public:
-        const static WemHierarchyType type = WemHierarchyType::Action;
+        static constexpr WemHierarchyType type = WemHierarchyType::Action;
 
         explicit WemHierarchyAction(dragon::Array<uint8_t> &buffer, uintptr_t &offset, uint32_t &version) {
             action_type = buffer.lpcast<uint16_t>(offset);

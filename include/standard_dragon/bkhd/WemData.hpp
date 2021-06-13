@@ -10,7 +10,7 @@
 namespace dragon::bkhd {
     class WemData : public WemChunk {
     public:
-        const static uint32_t fourcc = DRAGON_MAGIC32('D', 'A', 'T', 'A');
+        static constexpr uint32_t fourcc = DRAGON_MAGIC32('D', 'A', 'T', 'A');
 
         std::shared_ptr<dragon::Array<uint8_t>> data;
 

@@ -10,7 +10,7 @@
 namespace dragon::bkhd {
     class WemDataIndex : public WemChunk {
     public:
-        const static uint32_t fourcc = DRAGON_MAGIC32('D', 'I', 'D', 'X');
+        static constexpr uint32_t fourcc = DRAGON_MAGIC32('D', 'I', 'D', 'X');
 
 #pragma pack(push, 1)
         using DataIndexEntry = struct BNK_DIDX_ENTRY {

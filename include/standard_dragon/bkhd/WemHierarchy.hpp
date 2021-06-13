@@ -26,7 +26,7 @@ namespace dragon::bkhd {
 
     class WemHierarchy : public WemChunk {
     public:
-        const static uint32_t fourcc = DRAGON_MAGIC32('H', 'I', 'R', 'C');
+        static constexpr uint32_t fourcc = DRAGON_MAGIC32('H', 'I', 'R', 'C');
 
         explicit WemHierarchy(dragon::Array<uint8_t> &buffer, uint32_t &version) {
             uintptr_t ptr = 0;

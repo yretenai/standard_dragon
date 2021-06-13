@@ -34,7 +34,7 @@ namespace dragon::bkhd::hirc {
 
     class WemHierarchyChunk {
     public:
-        const static WemHierarchyType type    = WemHierarchyType::None;
+        static constexpr WemHierarchyType type    = WemHierarchyType::None;
         virtual ~WemHierarchyChunk() noexcept = default;
     };
 } // namespace dragon::bkhd::hirc
