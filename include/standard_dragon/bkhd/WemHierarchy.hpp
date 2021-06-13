@@ -6,7 +6,12 @@
 
 #include "WemChunk.hpp"
 
+#include "hirc/WemHierarchyAction.hpp"
 #include "hirc/WemHierarchyChunk.hpp"
+#include "hirc/WemHierarchyContainer.hpp"
+#include "hirc/WemHierarchyEvent.hpp"
+#include "hirc/WemHierarchySound.hpp"
+#include "hirc/WemHierarchySwitch.hpp"
 #include "hirc/WemHierarchyUnimplemented.hpp"
 
 namespace dragon::bkhd {
@@ -26,15 +31,20 @@ namespace dragon::bkhd {
                 types[id]         = type;
 
                 switch (type) {
-                    case hirc::WemHierarchyType::Sound:
+                    case hirc::WemHierarchySound::type:
+                        chunks[id] = std::make_shared<hirc::WemHierarchySound>(slice, loc_ptr);
                         break;
-                    case hirc::WemHierarchyType::Action:
+                    case hirc::WemHierarchyAction::type:
+                        chunks[id] = std::make_shared<hirc::WemHierarchyAction>(slice, loc_ptr);
                         break;
-                    case hirc::WemHierarchyType::Event:
+                    case hirc::WemHierarchyEvent::type:
+                        chunks[id] = std::make_shared<hirc::WemHierarchyEvent>(slice, loc_ptr);
                         break;
-                    case hirc::WemHierarchyType::Container:
+                    case hirc::WemHierarchyContainer::type:
+                        chunks[id] = std::make_shared<hirc::WemHierarchyContainer>(slice, loc_ptr);
                         break;
-                    case hirc::WemHierarchyType::SwitchContainer:
+                    case hirc::WemHierarchySwitch::type:
+                        chunks[id] = std::make_shared<hirc::WemHierarchySwitch>(slice, loc_ptr);
                         break;
                     case hirc::WemHierarchyType::MusicSegment:
                         break;
