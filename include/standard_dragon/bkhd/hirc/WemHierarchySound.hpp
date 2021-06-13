@@ -12,12 +12,10 @@ namespace dragon::bkhd::hirc {
     public:
         const static WemHierarchyType type = WemHierarchyType::Sound;
 
-        explicit WemHierarchySound(dragon::Array<uint8_t> &buffer, uintptr_t &offset) {
+        explicit WemHierarchySound(dragon::Array<uint8_t> &buffer, uintptr_t &offset, uint32_t &version) {
             source = SourceInfo(buffer, offset);
-            params = NodeBaseParams(buffer, offset);
         };
 
         SourceInfo source;
-        NodeBaseParams params;
     };
 } // namespace dragon::bkhd::hirc

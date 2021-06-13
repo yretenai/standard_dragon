@@ -10,6 +10,10 @@
 #include "hirc/WemHierarchyChunk.hpp"
 #include "hirc/WemHierarchyContainer.hpp"
 #include "hirc/WemHierarchyEvent.hpp"
+#include "hirc/WemHierarchyMusic.hpp"
+#include "hirc/WemHierarchyMusicSegment.hpp"
+#include "hirc/WemHierarchyMusicSwitch.hpp"
+#include "hirc/WemHierarchyMusicTrack.hpp"
 #include "hirc/WemHierarchySound.hpp"
 #include "hirc/WemHierarchySwitch.hpp"
 #include "hirc/WemHierarchyUnimplemented.hpp"
@@ -17,14 +21,14 @@
 namespace dragon::bkhd {
 
     // HIRC parsing uses structures defined in bnnm's wwiser project
-    // dragon::bkhd only works with 2016 versions onward and is mostly incomplete-- built with a specific purpose.
+    // dragon::bkhd only works with specific versions and is mostly incomplete-- built with a specific purpose.
     // https://github.com/bnnm/wwiser
 
     class WemHierarchy : public WemChunk {
     public:
         const static uint32_t fourcc = DRAGON_MAGIC32('H', 'I', 'R', 'C');
 
-        explicit WemHierarchy(dragon::Array<uint8_t> &buffer) {
+        explicit WemHierarchy(dragon::Array<uint8_t> &buffer, uint32_t &version) {
             uintptr_t ptr = 0;
             auto count    = buffer.lpcast<uint32_t>(ptr);
             for (auto i = 0; i < count; ++i) {
@@ -35,33 +39,41 @@ namespace dragon::bkhd {
                 auto id           = slice.lpcast<uint32_t>(loc_ptr);
                 types[id]         = type;
 
-                switch (type) {
-                    case hirc::WemHierarchySound::type:
-                        chunks[id] = std::make_shared<hirc::WemHierarchySound>(slice, loc_ptr);
-                        break;
-                    case hirc::WemHierarchyAction::type:
-                        chunks[id] = std::make_shared<hirc::WemHierarchyAction>(slice, loc_ptr);
-                        break;
-                    case hirc::WemHierarchyEvent::type:
-                        chunks[id] = std::make_shared<hirc::WemHierarchyEvent>(slice, loc_ptr);
-                        break;
-                    case hirc::WemHierarchyContainer::type:
-                        chunks[id] = std::make_shared<hirc::WemHierarchyContainer>(slice, loc_ptr);
-                        break;
-                    case hirc::WemHierarchySwitch::type:
-                        chunks[id] = std::make_shared<hirc::WemHierarchySwitch>(slice, loc_ptr);
-                        break;
-                    case hirc::WemHierarchyType::MusicSegment:
-                        break;
-                    case hirc::WemHierarchyType::MusicTrack:
-                        break;
-                    case hirc::WemHierarchyType::MusicSwitch:
-                        break;
-                    case hirc::WemHierarchyType::MusicContainer:
-                        break;
-                    default:
-                        chunks[id] = std::make_shared<hirc::WemHierarchyUnimplemented>(slice, loc_ptr);
-                        break;
+                try {
+                    switch (type) {
+                        case hirc::WemHierarchySound::type:
+                            chunks[id] = std::make_shared<hirc::WemHierarchySound>(slice, loc_ptr, version);
+                            break;
+                        case hirc::WemHierarchyAction::type:
+                            chunks[id] = std::make_shared<hirc::WemHierarchyAction>(slice, loc_ptr, version);
+                            break;
+                        case hirc::WemHierarchyEvent::type:
+                            chunks[id] = std::make_shared<hirc::WemHierarchyEvent>(slice, loc_ptr, version);
+                            break;
+                        case hirc::WemHierarchyContainer::type:
+                            chunks[id] = std::make_shared<hirc::WemHierarchyContainer>(slice, loc_ptr, version);
+                            break;
+                        case hirc::WemHierarchySwitch::type:
+                            chunks[id] = std::make_shared<hirc::WemHierarchySwitch>(slice, loc_ptr, version);
+                            break;
+                        case hirc::WemHierarchyMusic::type:
+                            chunks[id] = std::make_shared<hirc::WemHierarchyMusic>(slice, loc_ptr, version);
+                            break;
+                        case hirc::WemHierarchyMusicSegment::type:
+                            chunks[id] = std::make_shared<hirc::WemHierarchyMusicSegment>(slice, loc_ptr, version);
+                            break;
+                        case hirc::WemHierarchyMusicSwitch::type:
+                            chunks[id] = std::make_shared<hirc::WemHierarchyMusicSwitch>(slice, loc_ptr, version);
+                            break;
+                        case hirc::WemHierarchyMusicTrack::type:
+                            chunks[id] = std::make_shared<hirc::WemHierarchyMusicTrack>(slice, loc_ptr, version);
+                            break;
+                        default:
+                            chunks[id] = std::make_shared<hirc::WemHierarchyUnimplemented>(slice, loc_ptr, version);
+                            break;
+                    }
+                } catch (const std::exception &e) {
+                    DRAGON_ELOG("error processing hierarchy chunk, got error: " << e.what());
                 }
             }
         }

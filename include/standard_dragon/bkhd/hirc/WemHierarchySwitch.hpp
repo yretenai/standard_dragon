@@ -12,14 +12,16 @@ namespace dragon::bkhd::hirc {
     public:
         const static WemHierarchyType type = WemHierarchyType::SwitchContainer;
 
-        explicit WemHierarchySwitch(dragon::Array<uint8_t> &buffer, uintptr_t &offset) {
-            params     = NodeBaseParams(buffer, offset);
+        explicit WemHierarchySwitch(dragon::Array<uint8_t> &buffer, uintptr_t &offset, uint32_t &version) {
+            params     = NodeBaseParams(buffer, offset, version);
             group_type = buffer.lpcast<uint8_t>(offset);
             group_id   = buffer.lpcast<uint32_t>(offset);
             default_id = buffer.lpcast<uint32_t>(offset);
             validation = buffer.lpcast<uint8_t>(offset);
             auto count = buffer.lpcast<uint32_t>(offset);
-            children   = buffer.lpcast<uint32_t>(offset, count);
+            if (count > 0) {
+                children = buffer.lpcast<uint32_t>(offset, count);
+            }
         };
 
         NodeBaseParams params;

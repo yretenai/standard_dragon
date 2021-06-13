@@ -12,9 +12,11 @@ namespace dragon::bkhd::hirc {
     public:
         const static WemHierarchyType type = WemHierarchyType::Event;
 
-        explicit WemHierarchyEvent(dragon::Array<uint8_t> &buffer, uintptr_t &offset) {
+        explicit WemHierarchyEvent(dragon::Array<uint8_t> &buffer, uintptr_t &offset, uint32_t &version) {
             auto count = buffer.lpcast<uint8_t>(offset);
-            actions    = buffer.lpcast<uint32_t>(offset, count);
+            if (count > 0) {
+                actions = buffer.lpcast<uint32_t>(offset, count);
+            }
         };
 
         dragon::Array<uint32_t> actions;

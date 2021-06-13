@@ -19,8 +19,8 @@ namespace dragon::bkhd::hirc {
 
         const static WemHierarchyType type = WemHierarchyType::Container;
 
-        explicit WemHierarchyContainer(dragon::Array<uint8_t> &buffer, uintptr_t &offset) {
-            params             = NodeBaseParams(buffer, offset);
+        explicit WemHierarchyContainer(dragon::Array<uint8_t> &buffer, uintptr_t &offset, uint32_t &version) {
+            params             = NodeBaseParams(buffer, offset, version);
             loop               = buffer.lpcast<ValueMod<uint16_t>>(offset);
             transition         = buffer.lpcast<ValueMod<float>>(offset);
             avoid_repeat_count = buffer.lpcast<uint16_t>(offset);
@@ -29,14 +29,18 @@ namespace dragon::bkhd::hirc {
             mode               = buffer.lpcast<uint8_t>(offset);
             flags              = buffer.lpcast<uint8_t>(offset);
             auto count         = buffer.lpcast<uint32_t>(offset);
-            children           = buffer.lpcast<uint32_t>(offset, count);
-            count              = buffer.lpcast<uint16_t>(offset);
-            playlist           = buffer.lpcast<PlaylistItem>(offset, count);
+            if (count > 0) {
+                children = buffer.lpcast<uint32_t>(offset, count);
+            }
+            count = buffer.lpcast<uint16_t>(offset);
+            if (count > 0) {
+                playlist = buffer.lpcast<PlaylistItem>(offset, count);
+            }
         };
 
         NodeBaseParams params;
-        ValueMod<uint16_t> loop;
-        ValueMod<float> transition;
+        ValueMod<uint16_t> loop {};
+        ValueMod<float> transition {};
         uint16_t avoid_repeat_count;
         uint8_t transition_mode;
         uint8_t random_mode;

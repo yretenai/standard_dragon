@@ -9,7 +9,7 @@
 namespace dragon::bkhd::hirc {
     class WemHierarchyUnimplemented : public WemHierarchyChunk {
     public:
-        explicit WemHierarchyUnimplemented(dragon::Array<uint8_t> &buffer, uintptr_t &offset) {
+        explicit WemHierarchyUnimplemented(dragon::Array<uint8_t> &buffer, uintptr_t &offset, uint32_t &version) {
             data = std::make_shared<dragon::Array<uint8_t>>(buffer.data(), buffer.byte_size());
         };
 
