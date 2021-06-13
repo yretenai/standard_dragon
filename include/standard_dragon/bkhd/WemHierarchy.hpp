@@ -15,6 +15,11 @@
 #include "hirc/WemHierarchyUnimplemented.hpp"
 
 namespace dragon::bkhd {
+
+    // HIRC parsing uses structures defined in bnnm's wwiser project
+    // dragon::bkhd only works with 2016 versions onward and is mostly incomplete-- built with a specific purpose.
+    // https://github.com/bnnm/wwiser
+
     class WemHierarchy : public WemChunk {
     public:
         const static uint32_t fourcc = DRAGON_MAGIC32('H', 'I', 'R', 'C');
