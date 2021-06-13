@@ -82,7 +82,7 @@ namespace dragon::bkhd {
         std::map<uint32_t, hirc::WemHierarchyType> types;
 
         template<typename T>
-        typename std::enable_if<std::is_base_of<dragon::bkhd::hirc::WemHierarchyChunk, T>::value, std::shared_ptr<T>>::value get_chunk(uint32_t id) {
+        typename std::enable_if<std::is_base_of<dragon::bkhd::hirc::WemHierarchyChunk, T>::value, std::shared_ptr<T>>::type get_chunk(uint32_t id) {
             if (!chunks.contains(id)) {
                 return nullptr;
             }
