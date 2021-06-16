@@ -14,8 +14,8 @@
     ((uint32_t) (uint8_t) (ch0) | ((uint32_t) (uint8_t) (ch1) << 8) | ((uint32_t) (uint8_t) (ch2) << 16) | ((uint32_t) (uint8_t) (ch3) << 24))
 
 #define DRAGON_MAGIC64(ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7)                                                                                  \
-    ((uint32_t) (uint8_t) (ch0) | ((uint32_t) (uint8_t) (ch1) << 8) | ((uint32_t) (uint8_t) (ch2) << 16) | ((uint32_t) (uint8_t) (ch3) << 24) | \
-     ((uint32_t) (uint8_t) (ch4) << 32) | ((uint32_t) (uint8_t) (ch5) << 40) | ((uint32_t) (uint8_t) (ch6) << 48) | ((uint32_t) (uint8_t) (ch7) << 56))
+    ((uint64_t) (uint8_t) (ch0) | ((uint64_t) (uint8_t) (ch1) << 8) | ((uint64_t) (uint8_t) (ch2) << 16) | ((uint64_t) (uint8_t) (ch3) << 24) | \
+     ((uint64_t) (uint8_t) (ch4) << 32) | ((uint64_t) (uint8_t) (ch5) << 40) | ((uint64_t) (uint8_t) (ch6) << 48) | ((uint64_t) (uint8_t) (ch7) << 56))
 
 #define DRAGON_ASSERT static_assert
 
