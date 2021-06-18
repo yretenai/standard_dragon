@@ -110,4 +110,14 @@ namespace dragon {
 
         return container;
     }
+
+    inline std::deque<std::filesystem::path> find_paths(std::deque<std::filesystem::path> &paths, const std::set<std::string> &filters = {}, std::filesystem::directory_options options = {}) {
+        std::deque<std::filesystem::path> container;
+
+        for (const auto &path : paths) {
+            find_paths(path, container, filters, options);
+        }
+
+        return container;
+    }
 } // namespace dragon
