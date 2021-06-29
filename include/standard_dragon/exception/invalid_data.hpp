@@ -4,17 +4,11 @@
 
 #pragma once
 
-#include <exception>
-#include <string>
-#include <utility>
+#include <standard_dragon/exception/reasonable.hpp>
 
 namespace dragon::exception {
-    class invalid_data : public std::exception {
+    class invalid_data : public reasonable {
     public:
-        std::string reason_message;
-        explicit invalid_data(const char *message = "invalid or unexpected data") { reason_message = message; }
-        explicit invalid_data(std::string message) { reason_message = std::move(message); }
-
-        [[nodiscard]] const char *what() const noexcept override { return reason_message.c_str(); }
+        explicit invalid_data(const char *message = "unexpected error") : reasonable(message) { }
     };
 } // namespace dragon::exception
